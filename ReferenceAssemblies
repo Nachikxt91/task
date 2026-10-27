@@ -1,0 +1,1050 @@
+#########    PRAC 1    ##########
+## PART-A RECONG
+
+sudo apt update
+recon-ng
+help
+marketplace install all
+workspaces list 
+workspace create security_breaches  (if already made in place of create us load)
+marketplace install recon/domains-contacts/whois_pocs
+modules load recon/domains-contacts/whois_pocs
+options list 
+options set SOURCE facebook.com
+run
+
+To come out of whois_pocs   :-  cmd -  back
+
+marketplace install recon/profiles-profiles/namechk
+modules load recon/profiles-profiles/namechk
+options set SOURCE “Brandon Stout”
+run
+back
+
+marketplace install reporting/html
+modules load reporting/html
+options set CREATOR ‘<Your name>’
+options set Customer Name ‘Mahesh Sahu’
+options set FILENAME /home/Kali/report.html
+run
+back
+back
+
+###PART-B USING DB MODULE
+
+recon-ng
+db insert domains
+       Then it will ask type the .com 
+	domain (TEXT):   tesla.com
+	notes (TEXT): example.com
+show domains
+modules search hack
+modules load recon/domains-hosts/hackertarget
+info
+options list
+options set SOURCE tesla.com
+run
+modules load reporting/html
+options set CREATOR “ABHISHEK”
+options set CUSTOMER “HARRIER”
+options set CUSTOMER “HARRIER”
+info
+options set FILENAME /home/kali/Documents/result.html
+run
+back
+back
+
+
+#### PART-windows CMD line utilities in linux
+sudo su     (it will take to root user)
+ping -h
+ifconfig 
+ping <ip>
+ping www.youtube.com
+ping www.youtube.com -f -l 1452
+tracert6 www.google.com
+tracert6 www.youtube.com
+nslookup
+      ->  set type=a
+      ->  www.chrome.com
+
+
+########################################################################
+#########    PRAC 2  ##########
+
+sudo dpkg-reconfigure wireshark-common
+
+sudo usermod -aG wireshark "$USER"
+
+exit 
+
+id -nG
+
+getcap /usr/bin/dumpcap
+
+wireshark --version | head -n 3
+
+tshark --version | head -n 3
+
+dumpcap -D
+
+mkdir -p ~/security-labs/practical-02/www
+
+cd ~/security-labs/practical-02
+
+cat > www/login.html << 'EOF'
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wireshark Lab</title>
+</head>
+<body>
+<h1>Local HTTP Demonstration</h1>
+<p>This page uses dummy laboratory data only.</p>
+</body>
+</html>
+EOF
+
+cat www/login.html
+
+python3 -m http.server 8080 --directory www
+
+IN new terminal
+wireshark (Open wireshark and select etho and start it check for packages)
+  Again new termThen in wireshark select the option of the loopback:lo then in the new terminal enter the following cmnds)
+ping -c 4 8.8.8.8
+
+Icmp (filter in the wireshark)
+
+
+In the new terminal run the following cmds
+curl http://127.0.0.1:8080/ 
+(Visit the wireshark) 
+
+Apply tcp filter over there (before starting the wiresharks)
+
+(Open a new terminal enter the following cmds)
+curl -v http://127.0.0.1:8080/login.html
+
+(Open the wire shark enter the following filter)
+tcp.port == 8080 or http
+
+(In the same terminal run)
+sudo tcpdump -ni lo udp
+
+(In another terminal run these commands) 
+python3 -c 'import socket; s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM); s.sendto(b"Wireshark UDP lab test",( "127.0.0.1",9999)); s.close()'
+
+(Open the wireshark select the loopback lo)
+Apply the udp filter
+
+(In the same terminal run the commands)
+curl http://127.0.0.1:8080/login.html
+
+(Open the wireshark Loopback lo and apply the filter as)
+tcp.port == 8080 or http
+
+
+(In the same terminal run this commands)
+curl -I --max-time 15 https://example.com
+
+(Open the wireshark then open the etho apply the filter as)
+tls
+
+
+Open the new terminal enter the following commands
+tshark -D
+
+sudo tshark -i lo -a duration:20 -w ~/security-labs/practical-02/capture.pcapng
+(if u enter this cmd and get the error use the following below cmds) 
+sudo tshark -i lo -a duration:10 -w /tmp/capture.pcapng → (if error comes add this cmds)
+(open a new terminal)
+ping -c 4 127.0.0.1
+ls -lh /tmp/capture.pcapng
+
+mkdir -p ~/security-labs/practical-02
+sudo mv /tmp/capture.pcapng ~/security-labs/practical-02/capture.pcapng
+sudo chown kali:kali ~/security-labs/practical-02/capture.pcapng
+tshark -r ~/security-labs/practical-02/capture.pcapng
+(if u get the permission denied then use the following cmd)
+sudo chown kali:kali /tmp/capture.pcapng
+sudo chmod 644 /tmp/capture.pcapng
+
+wireshark /tmp/capture.pcapng
+
+tshark -r /tmp/capture.pcapng
+
+tshark -r ~/security-labs/practical-02/capture.pcapng
+tshark -r ~/security-labs/practical-02/capture.pcapng -q -z io,phs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+###############################################################
+#########    PRAC 3 DVWA   ##########
+
+cat  /etc/os-release
+uname -a
+sudo apt update
+sudo apt install -y docker.io docker-compose git curl firefox-esr
+sudo systemctl start docker
+sudo systemctl status docker
+docker --version
+docker compose version
+firefox-esr --version
+git --version
+
+
+
+### PART-B create prac workspace
+
+mkdir -p ~/security-labs/practical-05/{evidence,screenshot}
+cd ~/security-labs/practical-05
+git clone https://github.com/digininja/DVWA.git
+cd DVWA
+git rev-parse HEAD | tee ../evidence/dvwa-commit.txt
+grep -n -A2 “ports:” compose.yml
+sudo docker compose pull    
+sudo docker compose up -d 
+sudo docker compose ps
+firefox-esr http://127.0.0.1:4280/ >/dev/null 2>&1 & 
+
+a website will open in firefoxx
+Enter admin and password as the username and password respectively.
+Click on create/reset database at the bottom of the page.
+
+After create/resetting, login again and the page should look like this:
+This is the index.php page.
+
+Set DVWA Security to low
+Click on the DVWA Security  and set the security level to low.
+
+### Part E - Reflected XSS Demonstration
+
+Open the Reflected XSS module
+Establish a normal baseline ->Type anythink like monkey d luffy
+Submit a harmless JavaScript payload (type this below script not copy paste)
+	Enter the following script in the textbox: 
+		<script>alert(‘Reflected-XSS’)</script>
+
+Observe the request URL after the script
+Inspect the request with Developer Tools
+	Press F12 and select Network.
+
+
+###  Part F - Stored XSS Demonstration
+Open the Stored XSS module
+Enter a normal guestbook record first
+	And click sign guestbook
+Store a harmless XSS payload
+	<script>alert(‘stored-XSS’)</script>
+Demonstrate persistence
+	Reload the page.
+	Alert appears again without re-entering the payload.
+
+####  Part G - DOM-based XSS Demonstration
+Open the DOM XSS module normally
+Use the documented harmless DOM payload
+	Select english language and click select
+In address bar enter the following URL:
+http://127.0.0.1:4280/vulnerabilities/xss_d/?default=English<script>alert(‘DOM-XSS’)</script>
+
+####Part H - Demonstrate defensive fix
+Change the DVWA security to Impossible 
+Open XSS(‘Reflected-XSS’)</script>
+This should not execute
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+########################################################################
+#########    PRAC 4   ##########
+
+
+kali ip :192.168.221.128
+window VMnet8:192.168.221.1   take this
+window VMnet1:192.168.35.1   don't take this 
+
+
+
+ifconfig
+nmap -sP 192.168.221.128
+nmap -sP 192.168.221.1
+sudo su
+echo 1 > /proc/sys/net/ipv4/ip_forward
+sudo iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080 
+
+arpspoof -i eth0 -t 192.168.221.1 192.168.221.128
+		windowip then kali ip
+
+sslstrip -p -l 8080
+
+in new terminal
+sudo su
+tail -f sslstrip.log
+
+open a website in window and kali and check the https to http
+
+
+#### PART-B SESSION HIJACKING IN AN ISOLATED KALI LINUX 
+
+sudo apt update
+sudo DEBIAN_FRONTEND=noninteractive apt install -y \
+>nmap ettercap-text-only tshark curl openssl python3 
+
+
+cat /etc/os-release | grep PRETTY_NAME 
+nmap --version | sed -n '1p'
+ettercap -v
+tshark --version | sed -n '1p'
+python3 --version 
+
+sudo ip netns add attacker
+sudo ip netns add victim
+
+sudo ip netns add server
+sudo ip link add br-lab type bridge
+sudo ip link set br-lab up 
+
+sudo ip link add veth-att type veth peer name att0
+sudo ip link add veth-vic type veth peer name vic0
+sudo ip link add veth-srv type veth peer name srv0 
+
+sudo ip link set att0 netns attacker
+sudo ip link set vic0 netns victim
+sudo ip link set srv0 netns server 
+
+sudo ip link set veth-att master br-lab
+sudo ip link set veth-vic master br-lab
+sudo ip link set veth-srv master br-lab 
+
+sudo ip link set veth-att up
+sudo ip link set veth-vic up
+sudo ip link set veth-srv up 
+
+sudo ip netns exec attacker ip link set lo up
+sudo ip netns exec attacker ip link set att0 up
+sudo ip netns exec attacker ip addr add 10.10.20.10/24 dev att0 
+
+sudo ip netns exec victim ip link set lo up
+sudo ip netns exec victim ip link set vic0 up
+sudo ip netns exec victim ip addr add 10.10.20.20/24 dev vic0 
+
+sudo ip netns exec server ip link set lo up
+sudo ip netns exec server ip link set srv0 up
+sudo ip netns exec server ip addr add 10.10.20.30/24 dev srv0 
+
+sudo ip netns exec attacker ip -br addr
+sudo ip netns exec victim ip -br addr
+sudo ip netns exec server ip -br addr
+sudo ip netns exec victim ping -c 2 10.10.20.30 
+
+sudo ip netns exec attacker nmap -sn 10.10.20.20 10.10.20.30 
+	victim to server
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################
+#########    PRAC 5  SOCIAL ENGINEERING ##########
+
+cat /etc/os-release | sed -n ‘1.6p’
+sudo apt update
+sudo apt install -y set
+dpkg-query -W -f=’${package}\t${version}\n’ set
+command -v setoolkit
+command -v se-toolkit
+mkdir -p ~/set-safe-lab
+mkdir -p ~/set-safe-complete
+
+-> HTML CODE 1
+cat > ~/set-safe-lab/index.html <<'HTMLEND'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security Training Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef1f4;
+      margin: 0;
+    }
+    .card {
+      max-width: 420px;
+      margin: 70px auto;
+      padding: 28px;
+      background: white;
+      border: 1px solid #bbb;
+      border-radius: 10px;
+    }
+    label { display: block; margin-top: 14px; }
+    input {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 18px;
+      width: 100%;
+      padding: 11px;
+    }
+    .warning {
+      background: #fff3cd;
+      padding: 10px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Security Training Portal</h1>
+    <p class="warning">
+      <b>LAB ONLY:</b> Use dummy credentials only.
+      This form does not transmit or store passwords.
+    </p>
+
+    <form id="trainingForm">
+      <label for="username">Training username</label>
+      <input id="username" value="student01" required>
+
+      <label for="password">Training password</label>
+      <input id="password" type="password"
+             value="LabOnly123!" required>
+
+      <label for="labcode">Lab code</label>
+      <input id="labcode" value="SE-LAB" required>
+
+      <button type="submit">Submit Training Data</button>
+    </form>
+
+    <p id="result" role="status"></p>
+  </div>
+
+  <script>
+    document.getElementById("trainingForm")
+      .addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const user = document.getElementById("username").value;
+        const code = document.getElementById("labcode").value;
+        const result = document.getElementById("result");
+
+        if (user === "student01" && code === "SE-LAB") {
+          result.textContent =
+            "Training submission complete. No credentials were transmitted or stored.";
+        } else {
+          result.textContent = "Please check your dummy training values.";
+        }
+
+        document.getElementById("password").value = "";
+      });
+  </script>
+</body>
+</html>
+HTMLEND
+
+
+
+-> HTML CODE 2
+
+cat > ~/set-safe-complete/index.html <<'HTMLEND'
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Training Complete</title>
+</head>
+<body style="font-family:Arial,sans-serif;max-width:700px;margin:70px auto;padding:20px">
+  <h1>Training submission complete</h1>
+  <p>This page is part of the isolated SET familiarization laboratory.</p>
+  <p>No real account has been accessed.</p>
+</body>
+</html>
+HTMLEND
+
+
+ls -l ~/set-safe-lab/index.html
+ls -l ~/set-safe-complete/index.html
+cat ~/set-safe-lab/index.html
+cat ~/set-safe-complete/index.html
+ls ~l ~/set-safe-lab/index.html ~/set-safe-complete/index.html
+python3 -m http.server 8081 –bind 127.0.0.1 –directory ~/set-safe-complete
+
+
+In new terminal run all below commands only
+curl -I http://127.0.0.1:8081
+sudo ss -ltnp | grep ‘:80’ || echo ‘port 80 is available’
+sudo systemctl stop apache2
+sudo ss -ltnp | grep ‘:80 ’ || echo ‘port 80 is available’
+sudo setoolkit
+
+after sudo toolkit you into set toolkit will start toolkit
+The terminal will show set>    So write the number which will indicate the task you want to perform
+
+
+set>  1
+set>  2
+set>  3
+set>  3
+	After 3 it will ask for IP address  : 127.0.0.1
+
+it will ask for website cloned : /home/kali/set-safe-lab/
+it wil show to option 1 and 2 choose 1
+	Enter choice [1 / 2] : 1
+
+it will ask for URL ENTER BELOW URL
+	http://127.0.0.1:8081/
+
+http://127.0.0.1:8081/ open this URL in firefox/chrome inside kali the page you will show training data -> click on train data or not is your choice 
+
+If you see in terminal 200 response it is running
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################################
+##########PRAC-6 VAPT(Vulnerability Assessment and Pen Testing)############
+
+sudo su                     
+sudo apt update
+sudo apt install -y docker.io docker-compose git nmap nikto curl
+sudo systemctl enable docker --now
+sudo systemctl is-active docker
+docker --version
+docker compose version
+nmap --version | head -n 1
+nikto --version 2>/dev/null | head
+curl --version | head -n 1
+mkdir -p ~/vapt-lab
+cd ~/vapt-lab 
+pwd
+git clone https://github.com/digininja/DVWA.git 
+cd ~/vapt-lab/DVWA 
+ls -la
+grep -A 2 -n “ports:” compose.yml
+sudo docker compose up -d
+(step error)sudo docker compose ps
+		If you got error in DVWA then do following steps
+		ping -c 4 8.8.8.8 , ping -c 4 google.com 
+		curl -I --max-time 10 https://registry-1.docker.io/v2/ 
+		sudo mkdir -p /etc/docker 
+		sudo nano /etc/docker/daemon.json
+		In the editor, add this configuration if it isn't already there: 
+			{ "dns": ["8.8.8.8", "1.1.1.1"] } 
+				Save using Ctrl + O, press Enter, then Ctrl + X. 
+		
+				sudo apt install systemd-resolved 
+				sudo systemctl enable --now systemd-resolved 
+				sudo mkdir -p /etc/systemd/resolved.conf.d 
+				sudo nano /etc/systemd/resolved.conf.d/dns.conf 
+					Add this configuration in the editor: 
+					[Resolve] DNS=8.8.8.8 1.1.1.1 
+					FallbackDNS=8.8.4.4 1.0.0.1
+				sudo systemctl restart systemd-resolved 
+				resolvectl status 
+				resolvectl query registry-1.docker.io 
+				getent hosts registry-1.docker.io 
+				sudo systemctl restart docker 
+				cd ~/vapt-lab/DVWA 
+				sudo docker compose up -d 
+
+sudo ss -lntp | grep ':4280' 
+go to firefox and type : http://127.0.0.1:4280
+go to DVWA and delete and create database
+again login with credentials go to terminal and type : cd ~/vapt-lab/DVWA
+mkdir -p lab-evidence
+
+printf "Target: http://127.0.0.1:4280\nScope: loopback only\n" | tee lab-evidence/scope.txt 
+(type the above cmd)
+
+curl -s -D lab-evidence/baseline_headers.txt -o /dev/null http:127.0.0.1:4280/
+
+	if this give error then follow this cmd
+
+	curl -s -D lab-evidence/baseline.txt -o /dev/null http:127.0.0.1:4280/
+	If this gives error: 
+	Create the evidence folder
+		Run: mkdir -p lab-evidence
+	Capture the baseline HTTP response headers
+	Run: 
+	curl -s -D lab-evidence/baseline_headers.txt -o /dev/null 			http://127.0.0.1:4280/
+		-D saves the response headers to a file.
+		-o /dev/null discards the response body.
+		-s suppresses the progress output.
+		Display the saved headers
+		cat lab-evidence/baseline_headers.txt
+	Optional: Save the HTTP status and headers together
+	curl -s -D lab-evidence/baseline.txt -o /dev/null http://127.0.0.1:4280/ 
+	cat lab-evidence/baseline.txt 
+	If the file is created but empty, or you see a connection error, check 	whether DVWA is running: docker compose ps If the containers aren't 	running, start them: 
+	docker compose up -d 
+
+
+cat lab-evidence/baseline_headers.txt
+nmap -Pn -sV -p 4280 127.0.0.1 -oN lab-evidence/nmap_service.txt
+nmap -Pn -p 4280 --script http-title,http-headers 127.0.0.1 -oN lab-	evidence/nmap_http.txt
+nikto -h http://127.0.0.1:4280 -output lab-evidence/nikto_before.txt-Format txt
+	cd ~/vapt-lab/DVWA
+	mkdir -p lab-evidence
+	nikto -h http://127.0.0.1:4280/ -output lab-evidence/nikto_before.txt
+
+less lab-evidence/nikto_before.txt 
+curl -s -D - -o /dev/null http://127.0.0.1:4280/login.php | grep -Ei '^(HTTP/|X-	Frame-Options:|Content-Security-Policy:)'
+curl -s -o /dev/null -w 'HTTP %{http_code}\n' http://127.0.0.1:4280/phpinfo.php    
+
+curl -s http://127.0.0.1:4280/phpinfo.php \ 
+> | grep -m 1 -i 'PHP Version' | sed 's/<[^>]*>//g'  
+
+curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
+> http://127.0.0.1:4280/phpinfo.php \
+> | tee lab-evidence/phpinfo_status.txt
+
+curl -s http://127.0.0.1:4280/phpinfo.php \
+> | grep -m 1 -i 'PHP Version' \
+> | sed 's/<[^>]*>//g' \      
+> | tee lab-evidence/phpinfo_version.txt 
+
+
+cat lab-evidence/phpinfo_status.txt
+cat lab-evidence/phpinfo_version.txt
+
+
+sudo docker compose exec dvwa bash -lc '
+a2enmod headers >/dev/null &&
+printf "%s\n" \
+"<IfModule mod_headers.c>" \
+"Header always set X-Frame-Options \"SAMEORIGIN\"" \
+"Header always set X-Content-Type-Options \"nosniff\"" \
+"Header always set Referrer-Policy \"no-referrer\"" \
+"</IfModule>" \
+> /etc/apache2/conf-available/vapt-hardening.conf &&
+a2enconf vapt-hardening >/dev/null &&
+apache2ctl configtest &&
+apache2ctl -k graceful
+'
+
+sudo docker compose exec dvwa \
+mv /var/www/html/phpinfo.php \
+/var/www/html/phpinfo.php.disabled
+
+
+curl -s -D - -o /dev/null \
+  http://127.0.0.1:4280/login.php \
+  | grep -Ei '^(HTTP/|X-Frame-Options|X-Content-Type-Options|Referrer-Policy)'
+
+
+curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
+  http://127.0.0.1:4280/phpinfo.php
+
+nikto -h http://127.0.0.1:4280 \
+  -output lab-evidence/nikto_after.txt \
+  -Format txt
+
+less lab-evidence/nikto_after.txt
+
+echo '--- BEFORE ---' 
+grep -Ei 'X-Frame-Options|X-Content-Type-Options|phpinfo' \ 
+lab-evidence/nikt_o_before.txt 
+
+
+echo '--- AFTER ---' 
+grep -Ei 'X-Frame-Options|X-Content-Type-Options|phpinfo' \ 
+lab-evidence/nikt_o_after.txt
+
+
+nano lab-evidence/VAPT_Report.txt
+sudo ss-lntp | grep ’:4280’ || echo ‘Port 4280 is not listening.’
+sudo docker sompose down -v
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################################
+##########PRAC-7 Phishing-Style-URL-Classification(Supervised ML)############
+
+cat /etc/os-release | head -n 3  
+Python3 –version
+sudo apt update
+sudo apt install -y python3-full python3-venv python3-pip unzip
+
+as we have downloaded the dataset.zip file by cmd be will unzip it
+https://www.rajeshmaurya.in/el/SAC/Practical-13_ML_Cybersecurity_Practical_A/datasets.zip 
+
+cd ~/Downloads
+ls
+unzip datasets.zip 
+ls -lh   (this will show the what file was inside datasets.zip)
+
+create a folder by name phishing_lab and in this there will be two sub folder by name - datasets  and output
+
+mkdir -p ~/Downloads/phishing_lab/datasets ~/Downloads/phishing_lab/outputs
+
+copy the unzip .csv file to the created folder datasets which done above
+
+cp /home/kali/Downloads/datasets/urls_synthetic.csv ~/Downloads/phishing_lab/datasets
+
+cd ~/Downloads/phishing_lab
+ls -lh datasets                              
+
+
+Create a virtual environment and install the libraries
+A virtual environment keeps the packages separate from Kali's system Python (PEP 668).
+
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install pandas scikit-learn matplotlib
+
+
+Verify the folder structure
+	pwd
+	ls -la
+	ls -lh datasets/
+
+
+Create the Python program (phishing_url_lab.py)
+cat > phishing_url_lab.py <<'PY'
+import os
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score,
+    f1_score, roc_auc_score, confusion_matrix,
+    classification_report, ConfusionMatrixDisplay
+)
+
+os.makedirs("outputs", exist_ok=True)
+
+df = pd.read_csv("datasets/urls_synthetic.csv")
+df = df.dropna(subset=["url", "label"])
+df["url"] = df["url"].astype(str)
+df["label"] = df["label"].astype(int)
+
+print("Dataset size:", len(df))
+print("\nLabel counts:")
+print(df["label"].value_counts().sort_index())
+
+X_train, X_test, y_train, y_test = train_test_split(
+    df["url"], df["label"],
+    test_size=0.25, random_state=42, stratify=df["label"]
+)
+
+model = Pipeline([
+    ("tfidf", TfidfVectorizer(analyzer="char", ngram_range=(3, 5))),
+    ("lr", LogisticRegression(max_iter=1000))
+])
+
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+scores = model.predict_proba(X_test)[:, 1]
+
+print(f"\nTraining records: {len(X_train)}")
+print(f"Testing records: {len(X_test)}")
+print(f"Accuracy:  {accuracy_score(y_test, pred):.3f}")
+print(f"Precision: {precision_score(y_test, pred, zero_division=0):.3f}")
+print(f"Recall:    {recall_score(y_test, pred, zero_division=0):.3f}")
+print(f"F1-score:  {f1_score(y_test, pred, zero_division=0):.3f}")
+print(f"ROC-AUC:   {roc_auc_score(y_test, scores):.3f}")
+
+print("\nClassification report:")
+print(classification_report(
+    y_test, pred, target_names=["benign", "suspicious"], zero_division=0
+))
+
+cm = confusion_matrix(y_test, pred, labels=[0, 1])
+print("Confusion matrix [[TN, FP], [FN, TP]]:")
+print(cm)
+
+ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=["Benign", "Suspicious"]
+).plot()
+plt.tight_layout()
+plt.savefig("outputs/url_confusion.png", dpi=150)
+plt.close()
+
+pd.DataFrame({
+    "url": X_test.values,
+    "true_label": y_test.values,
+    "pred_label": pred,
+    "suspicious_score": scores
+}).to_csv("outputs/url_test_predictions.csv", index=False)
+
+print("\nResults saved in the outputs/ folder.")
+PY
+
+
+
+Run the program
+	python phishing_url_lab.py
+
+Check the saved output files
+	ls -lh outputs/
+
+View the first predictions
+	cat outputs/url_test_predictions.csv | head -n 10
+
+Open the confusion-matrix chart
+	xdg-open outputs/url_confusion.png
+
+Verify the dataset class balance
+Confirms the data is balanced (equal benign and suspicious examples).
+
+	python -c "from collections import Counter; import pandas as pd;            	d=pd.read_csv('datasets/urls_synthetic.csv'); print(Counter(d['label']))"
+
+
+Record the environment and list the final outputs
+	python --version
+	python -m pip freeze > environment_versions.txt
+	ls outputs/
