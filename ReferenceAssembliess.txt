@@ -1,1092 +1,2843 @@
-######## PRAC-1 ###########
-### SIMPLE LINEAR REGRESSION V1 ###
+########  PRACTICAL-1  ###########
+######## Simple Blockchain for addition of two nos(Genesis Bloc)
+in terminal type node test.js  for output
+->  add.js file
+
+const c=require("crypto");
+class Block{
+    constructor(i,t,n1,n2,ph=""){
+        this.i=i;
+        this.t=t;
+        this.ph=ph;
+        this.n1=n1;
+        this.n2=n2;
+        this.sum=n1+n2;
+        this.h=this.calHash();
+    }
+    calHash(){
+        return c.createHash("sha256").update(this.i+this.t+this.sum+this.ph).digest('hex')
+
+
+    }
+}
+class Blockchain{
+    constructor(){
+        this.chain=[this.createGBlock()];
+    }
+    createGBlock(){
+        return new Block(0,Date.now(),"",0,0);
+    }
+    getCBlock(){
+        return this.chain[this.chain.length-1];
+    }
+    addBlock(b){
+        b.ph=this.getCBlock().h;
+        b.h=b.calHash();
+        this.chain.push(b);
+    }
+}
+module.exports.Block=Block;
+module.exports.Blockchain=Blockchain;
+
+-> test.js ######
+
+const{Block,Blockchain}=require('./add')
+let sm=new Blockchain();
+console.log("Developed");
+sm.addBlock(new Block (1,Date.now(),24,12));
+console.log(JSON.stringify(sm,null,3))
+
+#########################################################################
+####   Simple Blockchain for Prime Nos ########
+
+-> prime.js 
+
+const c = require("crypto");
+class Block{
+    constructor(i,t,n,ph=""){
+        this.i = i;
+        this.t = t;
+        this.ph = ph;
+        this.n = n;
+        this.prime = this.checkPrime(n);
+        this.h = this.calHash();
+    }
+    calHash(){
+        return c.createHash("sha256").update(this.i + this.t + this.prime + this.ph).digest('hex');
+    }
+    checkPrime(n) {
+        n = this.n;
+        if(n<=1)
+            return false;
+        for(let i = 2; i <= Math.sqrt(n); i++)
+            if(n%i===0)
+                return false;
+        return true;
+    }
+}
+
+class Blockchain{
+    constructor(){
+        this.chain = [this.createGBlock()]
+    }
+    createGBlock(){
+        return new Block(0,Date.now(),0,"");
+    }
+    getCBlock(){
+        return this.chain[this.chain.length-1];
+    }
+    addBlock(b){
+        b.ph = this.getCBlock().h;
+        b.h = b.calHash();
+        this.chain.push(b);
+    }
+}
+module.exports.Block = Block;
+module.exports.Blockchain = Blockchain;
+
+-> test.js
+
+const{Block,Blockchain} = require('./prime')
+let pm = new Blockchain();
+console.log("developed by ");
+pm.addBlock(new Block(1,Date.now(),24));
+pm.addBlock(new Block(2,Date.now(),13));
+pm.addBlock(new Block(2,Date.now(),1));
+console.log(JSON.stringify(pm,null,3));
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error,r2_score
+#########################################################################
+####  entered number is Krishnamurthy or not ########
 
+-> krishnamurthyno.js
 
-data=pd.read_csv('pracdata.csv')
-print(data.head())
-x=data[['yearexperience']]
-y=data['salary']
-print(x)
-print(y)
+const c = require("crypto");
+class Block{
+    constructor(i,t,n,ph=""){
+        this.i = i;
+        this.t = t;
+        this.ph = ph;
+        this.n = n;
+        this.krishnamurhty = this.checkKrishnamurthy(n);
+        this.h = this.calHash();
+    }
+    calHash(){
+        return c.createHash("sha256").update(this.i + this.t + this.krishnamurhty + this.ph).digest('hex');
+    }
+    checkKrishnamurthy(n) {
+    n = this.n;
 
-x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2,random_state=42)
-model = LinearRegression()
-model.fit(x_train, y_train)
-y_pred = model.predict(x_test)
-print(model.coef_)
-print(model.intercept_)
 
-#evaluate the mode 1
-mse=mean_squared_error(y_test,y_pred)
-#r2=r2_score(y_train,y_pred)
-print(mse)
-#print(r2)
-#plot range
-plt.scatter(x,y)
-plt.plot(x,model.predict(x),color='blue')
-plt.xlabel("Year of exp")
-plt.ylabel("Salary")
-plt.title("Simple Linear Regression")
-plt.show()
+    let temp = n;
+    let sum = 0;
 
 
-#################################
-### SIMPLE LINEAR REGRESSION V1 ###
+    while (temp > 0) {
+        let digit = temp % 10;
 
 
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+        let fact = 1;
+        for (let i = 1; i <= digit; i++) {
+            fact *= i;
+        }
 
-# Create a synthetic dataset for demonstration
-X = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).reshape(-1, 1)  # Example Feature (e.g., Experience)
-y = np.array([2, 4, 5, 4, 5, 7, 8, 9, 10, 12])  # Example Target (e.g., Salary)
 
-print("Original X:\n", X)
-print("Original y:\n", y)
+        sum += fact;
+        temp = Math.floor(temp / 10);
+    }
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
 
-print("X_train:\n", X_train)
-print("X_test:\n", X_test)
-print("y_train:\n", y_train)
-print("y_test:\n", y_test)
+    return sum === n;
+}
+}
 
-# Initialize and train the Linear Regression model
-model = LinearRegression()
-model.fit(X_train, y_train)
 
-# Make predictions on the test set
-y_pred = model.predict(X_test)
+class Blockchain{
+    constructor(){
+        this.chain = [this.createGBlock()]
+    }
+    createGBlock(){
+        return new Block(0,Date.now(),0,"");
+    }
+    getCBlock(){
+        return this.chain[this.chain.length-1];
+    }
+    addBlock(b){
+        b.ph = this.getCBlock().h;
+        b.h = b.calHash();
+        this.chain.push(b);
+    }
+}
 
-print("Predicted y_pred:\n", y_pred)
 
-import matplotlib.pyplot as plt
-from sklearn.metrics import mean_squared_error, r2_score
+module.exports.Block = Block;
+module.exports.Blockchain = Blockchain;
 
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
 
-print("MSE=", mse)
-print("R2=", r2)
 
-plt.scatter(X, y, color='blue')
-plt.plot(X, model.predict(X), color='red')
-plt.xlabel("Experience")
-plt.ylabel("Salary")
-plt.title("Simple Linear Regression")
-plt.show()
+-> test.js
 
+const{Block,Blockchain} = require('./krishnamurthynos')
+let pm = new Blockchain();
+console.log("developed by");
+pm.addBlock(new Block(1,Date.now(),145));
+pm.addBlock(new Block(1,Date.now(),123));
+console.log(JSON.stringify(pm,null,3));
 
-###########################################################
-########## Practical -1 Multi Linear Regression ###############
 
-## First create a Excel file add - 10 rows of Experience, Age, Education, Salary  
+########  PRACTICAL-2  ###########
+########  entered no is Kaprekar or not #########
 
-import pandas as pd
+->kaprekar.js
+const c = require("crypto");
 
-# Read the Excel file
-df = pd.read_csv("sample_multiple_linear_regression_data.csv")
 
-# Display first 5 rows
-print(df.head())
+class Block {
+    constructor(i, t, num, ph = "") {
+        this.i = i;
+        this.t = t;
+        this.ph = ph;
+        this.num = num;
+        this.result = this.isKaprekar(num);
+        this.h = this.calHash();
+    }
 
-# Display column names
-print(df.columns)
 
-# Independent Variables
-X = df[['Experience', 'Age']]
+    isKaprekar(num) {
+        if (num === 1) return true;
 
-# Dependent Variable
-y = df['Salary']
 
-from sklearn.model_selection import train_test_split
+        let sq = (num * num).toString();
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
-)
 
-from sklearn.linear_model import LinearRegression
+        for (let i = 1; i < sq.length; i++) {
+            let left = parseInt(sq.substring(0, i)) || 0;
+            let right = parseInt(sq.substring(i)) || 0;
 
-model = LinearRegression()
-model.fit(X_train, y_train)
 
-print("Model Trained Successfully!")
+            if (right > 0 && (left + right === num)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-y_pred = model.predict(X_test)
 
-print("Predicted Values:")
-print(y_pred)
+    calHash() {
+        return c.createHash("sha256")
+            .update(this.i + this.t + this.num + this.result + this.ph)
+            .digest("hex");
+    }
+}
 
-from sklearn.metrics import mean_squared_error, r2_score
 
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
+class Blockchain {
+    constructor() {
+        this.chain = [this.createGBlock()];
+    }
 
-print("Mean Squared Error (MSE):", mse)
-print("R² Score:", r2)
 
-print("Intercept:", model.intercept_)
-print("\nCoefficients:")
+    createGBlock() {
+        return new Block(0, Date.now(), 1);
+    }
 
-for feature, coefficient in zip(X.columns, model.coef_):
-    print(f"{feature}: {coefficient}")
 
+    getCBlock() {
+        return this.chain[this.chain.length - 1];
+    }
 
-comparison = pd.DataFrame({
-    "Actual Salary": y_test.values,
-    "Predicted Salary": y_pred
-})
 
-print(comparison)
+    addBlock(b) {
+        b.ph = this.getCBlock().h;
+        b.h = b.calHash();
+        this.chain.push(b);
+    }
+}
 
-import matplotlib.pyplot as plt
-import numpy as np
 
-plt.figure(figsize=(8, 6))
+module.exports.Block = Block;
+module.exports.Blockchain = Blockchain;
 
-# Scatter plot
-plt.scatter(y_test, y_pred, color='blue', label='Predicted Values')
+->test.js
 
-# Perfect prediction line
-min_val = df['Salary'].min()
-max_val = df['Salary'].max()
+const { Block, Blockchain } = require("./add");
+let sm = new Blockchain();
+console.log("Developed by ");
+sm.addBlock(new Block(1, Date.now(), 9));
+sm.addBlock(new Block(2, Date.now(), 45));
+sm.addBlock(new Block(3, Date.now(), 25));
+console.log(JSON.stringify(sm, null, 3));
 
-plt.plot(
-    [min_val, max_val],
-    [min_val, max_val],
-    color='red',
-    linewidth=2,
-    label='Ideal Prediction'
-)
 
-plt.xlabel("Actual Salary")
-plt.ylabel("Predicted Salary")
-plt.title("Actual vs Predicted Salary")
-plt.legend()
-plt.grid(True)
-plt.show()
+#########################################################################
+####  entered number is Armstrong or not. ########
 
-new_employee = pd.DataFrame([[8, 30, 18]], columns=['Experience', 'Age', 'Education'])
+-> am.js
 
-predicted_salary = model.predict(new_employee)
+const c = require("crypto");
 
-print("Predicted Salary:", predicted_salary[0])
 
-#####################################################################################
-############ Practical-1 Polynomial Regression
+class Block {
+    constructor(i, t, num, ph = "") {
+        this.i = i;
+        this.t = t;
+        this.ph = ph;
+        this.num = num;
+        this.result = this.isArmstrong(num);
+        this.h = this.calHash();
+    }
 
-## ## First create a Excel file add - 10 rows of Experience, Salary
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
-# Read Excel file
-df = pd.read_csv("sample_polynomial_regression_data.csv")
-print(df.head())
 
-X = df[['Experience']]
-y = df['Salary']
+    isArmstrong(num) {
+        let temp = num;
+        let digits = temp.toString().length;
+        let sum = 0;
 
-from sklearn.preprocessing import PolynomialFeatures
 
-# Degree of polynomial
-poly = PolynomialFeatures(degree=2)
-X_poly = poly.fit_transform(X)
+        while (temp > 0) {
+            let rem = temp % 10;
+            sum += Math.pow(rem, digits);
+            temp = Math.floor(temp / 10);
+        }
 
-from sklearn.model_selection import train_test_split
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X_poly,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+        return sum === num;
+    }
 
-from sklearn.linear_model import LinearRegression
 
-model = LinearRegression()
-model.fit(X_train, y_train)
+    calHash() {
+        return c.createHash("sha256")
+            .update(this.i + this.t + this.num + this.result + this.ph)
+            .digest("hex");
+    }
+}
 
-print("Polynomial Regression Model Trained Successfully!")
 
-y_pred = model.predict(X_test)
+class Blockchain {
+    constructor() {
+        this.chain = [this.createGBlock()];
+    }
 
-print("Predicted Values:")
-print(y_pred)
 
-from sklearn.metrics import mean_squared_error, r2_score
+    createGBlock() {
+        return new Block(0, Date.now(), 1);
+    }
 
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
 
-print("Mean Squared Error:", mse)
-print("R² Score:", r2)
+    getCBlock() {
+        return this.chain[this.chain.length - 1];
+    }
 
-X_grid = np.arange(X['Experience'].min(), X['Experience'].max(), 0.1)
-X_grid = X_grid.reshape(-1, 1)
-X_grid_poly = poly.transform(X_grid)
 
-plt.figure(figsize=(8, 6))
+    addBlock(b) {
+        b.ph = this.getCBlock().h;
+        b.h = b.calHash();
+        this.chain.push(b);
+    }
+}
 
-plt.scatter(X, y, color='blue', label='Actual Data')
+module.exports.Block = Block;
+module.exports.Blockchain = Blockchain;
 
-plt.plot(
-    X_grid,
-    model.predict(X_grid_poly),
-    color='red',
-    linewidth=2,
-    label='Polynomial Curve'
-)
 
-plt.xlabel("Experience")
-plt.ylabel("Salary")
-plt.title("Polynomial Regression")
-plt.legend()
-plt.grid(True)
-plt.show()
 
-new_experience = [[8]]
-new_poly = poly.transform(new_experience)
+-> test.js
 
-predicted_salary = model.predict(new_poly)
+const { Block, Blockchain } = require("./am");
+let sm = new Blockchain();
+console.log("Developed ");
+sm.addBlock(new Block(1, Date.now(), 153));
+sm.addBlock(new Block(2, Date.now(), 370));
+sm.addBlock(new Block(3, Date.now(), 123));
+console.log(JSON.stringify(sm, null, 3));
 
-print("Predicted Salary:", predicted_salary[0])
 
-#################################################################################
+########  PRACTICAL-3  ###########
+########  WAP to create a blockchain for Anagram #########
 
-#### Practical-2 Artificial Neural Network (ANN) Classification using the Iris Dataset with TensorFlow/Keras
+-> anagram.py   (output cmd in terminal:  python filename.py / python3 or py)
 
-import numpy as np
-import pandas as pd
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import (
-    accuracy_score,
-    confusion_matrix,
-    classification_report
-)
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+import hashlib
+import datetime
+class Block:
+    print("\nDeveloped by Abhishek Mudaliyar")
+    def __init__(self, i, w1, w2, r, ph):
+        self.i = i
+        self.t = str(datetime.datetime.now())
+        self.w1 = w1
+        self.w2 = w2
+        self.r = r
+        self.ph = ph
+        self.h = self.calhash()
+    def calhash(self):
+        data = str(self.i) + self.t + self.w1 + self.w2 + str(self.r) + self.ph
+        return hashlib.sha256(data.encode()).hexdigest()
 
-# Load Dataset
-iris = load_iris()
-X = iris.data
-y = iris.target
 
-print(X[:5])
-print(y[:5])
 
-# Create DataFrame
-df = pd.DataFrame(X, columns=iris.feature_names)
-df['Species'] = y
 
-print(df.head())
+class Blockchain:
+    def __init__(self):
+        self.chain = [self.createGBlock()]
+    def createGBlock(self):
+        return Block(0, "Genesis", "Genesis", True, "0")
+    def addblock(self, w1, w2):
+        s1 = w1.lower()
+        s2 = w2.lower()
+        # Check Anagram
+        r = sorted(s1) == sorted(s2)
+        ph = self.chain[-1].h
+        b = Block(len(self.chain), w1, w2, r, ph)
+        self.chain.append(b)
+    def display(self):
+        for b in self.chain:
+            print("Block:", b.i)
+            print("Timestamp:", b.t)
+            print("Word 1:", b.w1)
+            print("Word 2:", b.w2)
+            print("Anagram:", b.r)
+            print("Previous Hash:", b.ph)
+            print("Hash:", b.h)
+            print("-" * 50)
 
-# Split Dataset
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
-)
+# Driver Code
+p = Blockchain()
+p.addblock("eat", "tea")
+p.addblock("listen", "silent")
+p.addblock("hello", "world")
+p.display()
 
-# Standardize Data
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+#### validated blockchain ####
 
-# Build ANN Model
-model = Sequential()
-model.add(Dense(units=8, activation='relu', input_shape=(4,)))
-model.add(Dense(units=6, activation='relu'))
-model.add(Dense(units=3, activation='softmax'))
+import hashlib
+import datetime
+class Block:
+    def __init__(self, i, w1, w2, r, ph):
+        self.i = i
+        self.t = str(datetime.datetime.now())
+        self.w1 = w1
+        self.w2 = w2
+        self.r = r
+        self.ph = ph
+        self.h = self.calhash()
 
-# Display Model Summary
-model.summary()
+    def calhash(self):
+        data = str(self.i) + self.t + self.w1 + self.w2 + str(self.r) + self.ph
+        return hashlib.sha256(data.encode()).hexdigest()
 
-# Compile Model
-model.compile(
-    optimizer='adam',
-    loss='sparse_categorical_crossentropy',
-    metrics=['accuracy']
-)
+class Blockchain:
+    def __init__(self):
+        self.chain = [self.createGBlock()]
 
-# Train Model
-history = model.fit(
-    X_train,
-    y_train,
-    epochs=50,
-    batch_size=8,
-    verbose=1
-)
+    def createGBlock(self):
+        return Block(0, "Genesis", "Genesis", True, "0")
 
-# Predictions
-y_pred_prob = model.predict(X_test)
-y_pred = np.argmax(y_pred_prob, axis=1)
+    def addblock(self, w1, w2):
+        s1 = w1.lower()
+        s2 = w2.lower()
+        r = sorted(s1) == sorted(s2)
+        ph = self.chain[-1].h
+        b = Block(len(self.chain), w1, w2, r, ph)
+        self.chain.append(b)
 
-# Accuracy
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
+    def display(self):
+        for b in self.chain:
+            print("Block:", b.i)
+            print("Timestamp:", b.t)
+            print("Word 1:", b.w1)
+            print("Word 2:", b.w2)
+            print("Anagram:", b.r)
+            print("Previous Hash:", b.ph)
+            print("Hash:", b.h)
+            print("-" * 50)
 
-# Confusion Matrix
-print("\nConfusion Matrix")
-print(confusion_matrix(y_test, y_pred))
 
-# Classification Report
-print("\nClassification Report")
-print(classification_report(y_test, y_pred))
+    def validate(self):
+        for i in range(1, len(self.chain)):
+            if self.chain[i].ph != self.chain[i-1].h:
+                return False
+        return True
 
-# Train Model
-history = model.fit(
-    X_train,
-    y_train,
-    epochs=50,
-    batch_size=8,
-    validation_split=0.2,
-    verbose=1
-)
 
-# Plot
-import matplotlib.pyplot as plt
+print("Developed by Abhishek Mudaliyar\n")
 
-plt.figure(figsize=(8, 5))
-plt.plot(history.history['accuracy'], label='Training Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+p = Blockchain()
+p.addblock("eat", "tea")
+p.addblock("hi", "Msc cs")
+p.addblock("hello", "world")
+p.display()
 
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.title('Training and Validation Accuracy')
-plt.legend()
-plt.grid(True)
-plt.show()
+if p.validate():
+    print("Blockchain is Valid")
+else:
+    print("Blockchain is Not Valid")
 
 
-#############################################################################
-## Practical-3 Random Forest Regression  ########################
+#########################################################################
+####  WAP for transactions system using the blockchain. ########
 
-## ## First create a Excel file add - 5 rows of Area, Bedrooms, Age of House,Price
+import hashlib
+import datetime
+class Block:
+    def __init__(self, i, amount, balance, ph):
+        self.i = i
+        self.t = str(datetime.datetime.now())
+        self.amount = amount
+        self.balance = balance
+        self.ph = ph
+        self.h = self.calhash()
+
+    def calhash(self):
+        data = str(self.i) + self.t + str(self.amount) + str(self.balance) + self.ph
+        return hashlib.sha256(data.encode()).hexdigest()
+
+class Blockchain:
+    def __init__(self):
+        self.balance = 0
+        self.chain = [self.createGBlock()]
+
+
+    def createGBlock(self):
+        return Block(0, 0, 0, "0")
+
+
+    def deposit(self, amount):
+        self.balance += amount
+        ph = self.chain[-1].h
+        b = Block(len(self.chain), amount, self.balance, ph)
+        self.chain.append(b)
+
+
+    def withdraw(self, amount):
+        if amount <= self.balance:
+            self.balance -= amount
+            ph = self.chain[-1].h
+            b = Block(len(self.chain), -amount, self.balance, ph)
+            self.chain.append(b)
+        else:
+            print("Insufficient Balance")
+
+
+    def display(self):
+        print("\nDeveloped by Abhishek Mudaliyar\n")
+
+
+        for b in self.chain:
+            print("Block No :", b.i)
+            print("Timestamp :", b.t)
+            print("Amount :", b.amount)
+            print("Balance :", b.balance)
+            print("Previous Hash :", b.ph)
+            print("Current Hash :", b.h)
+            print("-" * 50)
+
+    def validate(self):
+        for i in range(1, len(self.chain)):
+            if self.chain[i].ph != self.chain[i-1].h:
+                return False
+        return True
+
+# Driver Code
+bc = Blockchain()
+bc.deposit(5000)
+bc.withdraw(1500)
+bc.deposit(2000)
+bc.display()
+
+if bc.validate():
+    print("Blockchain is Valid")
+else:
+    print("Blockchain is Invalid")
+
+
+#########################################################################
+####  WAP to mark the student attendance using simple blockchain ########
+
+import hashlib
+import datetime
+class Block:
+    def __init__(self, i, name, attendance, ph):
+        self.i = i
+        self.t = str(datetime.datetime.now())
+        self.name = name
+        self.attendance = attendance
+        self.ph = ph
+        self.h = self.calhash()
+    def calhash(self):
+        data = str(self.i) + self.t + self.name + self.attendance + self.ph
+        return hashlib.sha256(data.encode()).hexdigest()
+class Blockchain:
+    def __init__(self):
+        self.chain = [self.createGBlock()]
+    def createGBlock(self):
+        return Block(0, "Genesis", "None", "0")
+    def markAttendance(self, name, attendance):
+        ph = self.chain[-1].h
+        b = Block(len(self.chain), name, attendance, ph)
+        self.chain.append(b)
+    def display(self):
+        print("\nDeveloped by Abhishek Mudaliyar\n")
+        for b in self.chain:
+            print("Block No :", b.i)
+            print("Timestamp :", b.t)
+            print("Student Name :", b.name)
+            print("Attendance :", b.attendance)
+            print("Previous Hash :", b.ph)
+            print("Current Hash :", b.h)
+            print("-" * 50)
+    def validate(self):
+        for i in range(1, len(self.chain)):
+            if self.chain[i].ph != self.chain[i-1].h:
+                return False
+        return True
+bc = Blockchain()
+bc.markAttendance("Abhishek", "Present")
+bc.markAttendance("Saurabh", "Absent")
+bc.markAttendance("Mahesh", "Absent")
+bc.markAttendance("Pranav", "Present")
+bc.markAttendance("Tejas", "Present")
+bc.markAttendance("Yash", "Present")
+bc.display()
+if bc.validate():
+    print("Blockchain is Valid")
+else:
+    print("Blockchain is Invalid")
 
 
-# Step 1: Import Libraries
 
-# Data manipulation
-import pandas as pd
-import numpy as np
+########  PRACTICAL-4 REMIX IDE  ###########
+########  addition of two number  #########
 
-# Splitting dataset
-from sklearn.model_selection import train_test_split
+click on create btn then choose file with extension .sol (filename.sol)
+put the code and then press compile btn
+then click on deploy btn
+to display the passed argument click ->  Transact 
+to display the result click -> call
+check the debug and click on side arrow
 
-# Random Forest Regression
-from sklearn.ensemble import RandomForestRegressor
 
-# Model Evaluation
-from sklearn.metrics import (
-    mean_squared_error,
-    mean_absolute_error,
-    r2_score
-)
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
-# Visualization
-import matplotlib.pyplot as plt
+contract Add {
+    int public sum = 0;
 
-# Step 2: Load Dataset
-data = pd.read_csv("HousePrice.csv")
+    function setSum(int a, int b) public {
+        sum = a + b;
+    }
+}
 
-# Display the dataset
-print(data.head())
+#########################################################################
+#### create addition of 2 nos in smart contract & the arithmetic functions ########
 
-# Step 3: Separate Features and Target
-X = data[['Area', 'Bedrooms', 'Age of House']]
-y = data['Price']
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
-# Step 4: Split Dataset
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.20, random_state=42
-)
 
-# Step 5: Train Model
-model = RandomForestRegressor(
-    n_estimators=100,
-    criterion='squared_error',
-    max_depth=5,
-    random_state=42
-)
+contract ArithmeticOperator {
+    int public result;
 
-model.fit(X_train, y_train)
 
-# Step 7: Predict
-prediction = model.predict(X_test)
+    // Addition
+    function add(int a, int b) public {
+        result = a + b;
+    }
 
-# Step 8: Evaluate Model
 
-# R² Score
-print("R2 Score:", r2_score(y_test, prediction))
+    // Subtraction
+    function sub(int a, int b) public {
+        result = a - b;
+    }
 
-# Mean Squared Error
-print("MSE:", mean_squared_error(y_test, prediction))
 
-# Step 9: Predict New House Price
-new_house = pd.DataFrame(
-    [[1800, 3, 6]],
-    columns=['Area', 'Bedrooms', 'Age of House']
-)
+    // Multiplication
+    function mul(int a, int b) public {
+        result = a * b;
+    }
 
-price = model.predict(new_house)
 
-print(price)
+    // Division
+    function div(int a, int b) public {
+        require(b != 0, "Division by zero");
+        result = a / b;
+    }
 
-# Step 10: Feature Importance
-importance = model.feature_importances_
 
-for feature, score in zip(X.columns, importance):
-    print(feature, score)
+    // Modulus
+    function mod(int a, int b) public {
+        require(b != 0, "Modulo by zero");
+        result = a % b;
+    }
+}
 
-# Step 11: Visualize Feature Importance
-plt.figure(figsize=(6, 4))
-plt.bar(X.columns, importance)
-plt.title("Feature Importance")
-plt.xlabel("Features")
-plt.ylabel("Importance")
-plt.show()
+#########################################################################
+####  check palindrome of a nos  ########
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+
+contract Palindrome {
+
+
+    function checkPalindrome(uint n) public pure returns (bool) {
+        uint rev = 0;
+        uint temp = n;
+
+
+        while (temp > 0) {
+            rev = rev * 10 + temp % 10;
+            temp = temp / 10;
+        }
+
+
+        return rev == n;
+    }
+}
+
+################################################################
+####  Create an array for student to add the student in the array and count the nos of students an get the name of all students  ########
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+
+contract Student {
+
+
+    string[] public students;
+
+
+
+
+    function addStudent(string memory name) public {
+        students.push(name);
+    }
+
+
+   
+    function getCount() public view returns (uint) {
+        return students.length;
+    }
+
+
+   
+    function getStudents() public view returns (string[] memory) {
+        return students;
+    }
+}
+
+#########################################################################
+####  To get the N number from the user and find the mean, median ,mode ########
+put input in this form [15,6,7,4]
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+
+contract Stats {
+
+
+    uint[] public a;
+
+
+    function set(uint[] memory x) public {
+        a = x;
+    }
+
+
+    function mean() public view returns (uint) {
+        uint s;
+        for (uint i = 0; i < a.length; i++)
+            s += a[i];
+        return s / a.length;
+    }
+
+
+    function median() public view returns (uint) {
+        return a[a.length / 2];
+    }
+
+
+    function mode() public view returns (uint) {
+        return a[0];
+    }
+}
+
+
+
+########  PRACTICAL-5 REMIX IDE  ###########
+########  To Study the Structure in Solidity for the Blockchain (single entry)  #########
+put input in "" if string and or marks or multiple entry use [2,4,5,6]
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+contract StudentData {
+
+    struct Student {
+        string name;
+        string studentAddress;
+        uint rollNo;
+        uint[5] marks;
+    }
+
+    Student[] students;
+
+    // Add Student (Maximum 5)
+    function addStudent(
+        string memory _name,
+        string memory _address,
+        uint _roll,
+        uint[5] memory _marks
+    ) public {
+
+        require(students.length < 5, "Only 5 students allowed");
+
+        students.push(Student(_name, _address, _roll, _marks));
+    }
+
+    // Display Student by Roll Number
+    function getStudent(uint _roll)
+        public
+        view
+        returns (
+            string memory,
+            string memory,
+            uint,
+            uint,
+            string memory,
+            string memory
+        )
+    {
+        for(uint i = 0; i < students.length; i++) {
+
+            if(students[i].rollNo == _roll) {
+
+                uint total = 0;
+
+                for(uint j = 0; j < 5; j++)
+                    total += students[i].marks[j];
+
+                uint percentage = total / 5;
+
+                string memory grade;
+                string memory remark;
+
+                if(percentage >= 90){
+                    grade = "O";
+                    remark = "Outstanding";
+                }
+                else if(percentage >= 75){
+                    grade = "A";
+                    remark = "Scored Well";
+                }
+                else if(percentage >= 60){
+                    grade = "B";
+                    remark = "Good";
+                }
+                else{
+                    grade = "C";
+                    remark = "Need More Hard Work";
+                }
+
+                return (
+                    students[i].name,
+                    students[i].studentAddress,
+                    percentage,
+                    students[i].rollNo,
+                    grade,
+                    remark
+                );
+            }
+        }
+
+        revert("Student Not Found");
+    }
+}
+
+
+#########################################################################
+####  Structure in Solidity for BlockChain (multiple Variable) ########
+
+put input in "" if string and or marks or multiple entry use [2,4,5,6]
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+
+contract StudInfo {
+
+
+   struct Student {
+       int id;
+       string name;
+       string addr;
+       int age;
+       uint[] marks;
+   }
+
+
+   Student[] students;
+
+
+   // Add a student
+   function addStudent(
+       int i,
+       string memory n,
+       string memory a,
+       int ag,
+       uint[] memory m
+   ) public {
+       students.push(Student(i, n, a, ag, m));
+   }
+
+
+   // Total number of students
+   function totalStudents() public view returns (uint) {
+       return students.length;
+   }
+
+
+   // Get all student details
+   function allStudentDetails()
+       public
+       view
+       returns (Student[] memory)
+   {
+       return students;
+   }
+
+
+   // Get grades of all students
+   function getAllGrade()
+       public
+       view
+       returns (string[] memory names, string[] memory grades)
+   {
+       names = new string[](students.length);
+       grades = new string[](students.length);
+
+
+       for (uint i = 0; i < students.length; i++) {
+
+
+           names[i] = students[i].name;
+
+
+           uint sum = 0;
+
+
+           for (uint j = 0; j < students[i].marks.length; j++) {
+               sum += students[i].marks[j];
+           }
+
+
+           uint percentage = sum / students[i].marks.length;
+
+
+           if (percentage >= 95) {
+               grades[i] = "Special Grade";
+           }
+           else if (percentage >= 80) {
+               grades[i] = "Grade1";
+           }
+           else if (percentage >= 75) {
+               grades[i] = "Grade2";
+           }
+           else {
+               grades[i] = "You are the Potential Man";
+           }
+       }
+   }
+}
+
+
+
+#########################################################################
+#### Create a structure for demonstrating deposit and transaction of a user account ########
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+contract Bank {
+
+    // Structure
+    struct Account {
+        uint accountNo;
+        string name;
+        uint balance;
+    }
+
+    // Account variable
+    Account public account;
+
+    // Constructor
+    constructor(uint _accountNo, string memory _name, uint _balance) {
+        account.accountNo = _accountNo;
+        account.name = _name;
+        account.balance = _balance;
+    }
+
+    // Deposit money
+    function deposit(uint amount) public {
+        account.balance = account.balance + amount;
+    }
+
+    // Withdraw money
+    function withdraw(uint amount) public returns (string memory) {
+
+        if (amount > account.balance) {
+            return "Insufficient Balance";
+        }
+
+        account.balance = account.balance - amount;
+        return "Withdrawal Successful";
+    }
+
+    // Display account details
+    function display()
+        public
+        view
+        returns (
+            uint,
+            string memory,
+            uint
+        )
+    {
+        return (
+            account.accountNo,
+            account.name,
+            account.balance
+        );
+    }
+}
+
+
+#########################################################################
+#### Write a program to demonstrate perfect number in solidity. ########
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+contract PerfectNumber {
+
+    uint public number;
+
+    // Function to accept number
+    function setNumber(uint _number) public {
+        number = _number;
+    }
+
+    // Function to check perfect number
+    function checkPerfect() public view returns (string memory) {
+
+        uint sum = 0;
+
+        for (uint i = 1; i < number; i++) {
+            if (number % i == 0) {
+                sum += i;
+            }
+        }
+
+        if (sum == number) {
+            return "The entered number is a Perfect Number.";
+        } else {
+            return "The entered number is NOT a Perfect Number.";
+        }
+    }
+}
+
+
+
+########  PRACTICAL-6 REMIX IDE  ###########
+########  Write a program to demonstrate the voting system  in solidity. #########
+
+input: put party names in ["TVK","BJP","CJP"] then deploy
+	vote: "BJP"
+	cn: type number - 0  (it will show party based on index)
+	ct: type party name "BJP"(it wil show party info)
+	votes: (on top you will see Account 1 change and apply multiple votes and every account have if copy paste here)
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+
+contract Voting {
+    mapping(string => uint) public ct;
+    mapping(address => bool) public voters;
+
+
+    string[] public cn;
+
+
+    constructor(string[] memory cdn) {
+        cn = cdn;
+    }
+
+
+    function vote(string memory c) public {
+        require(!voters[msg.sender], "You have already voted");
+
+
+        bool ce = false;
+
+
+        for (uint i = 0; i < cn.length; i++) {
+            if (keccak256(bytes(c)) == keccak256(bytes(cn[i]))) {
+                ce = true;
+                break;
+            }
+        }
+
+
+        require(ce, "Candidate does not exist");
+
+
+        ct[c]++;
+        voters[msg.sender] = true;
+    }
+
+
+    function getWinner() public view returns (string memory) {
+        string memory w;
+        uint t = 0;
+
+
+        for (uint i = 0; i < cn.length; i++) {
+            if (ct[cn[i]] > t) {
+                t = ct[cn[i]];
+                w = cn[i];
+            }
+        }
+
+
+        return w;
+    }
+}
+
+#########################################################################
+#### Write a program to demonstrate the Quiz system  in solidity  ########
+
+in input:  add: 5+5=
+		10
+	ansQ:  0 and the above answer 10
+	q: questions which will start from 0
+	tc(correct), tw(wrong)
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+
+contract Quiz {
+    struct Question {
+        string Qtest;
+        string CA;
+    }
+
+
+    Question[] public q;
+    uint public tc;
+    uint public tw;
+
+
+    event AnswerEv(string qu, string uans, bool isc);
+
+
+    function add(string memory qt, string memory cans) public {
+        q.push(Question(qt, cans));
+    }
+
+
+    function ansQ(uint i, string memory uans) public {
+        require(i < q.length, "Invalid question index");
+
+
+        if (comStr(uans, q[i].CA)) {
+            tc++;
+            emit AnswerEv(q[i].Qtest, uans, true);
+        } else {
+            tw++;
+            emit AnswerEv(q[i].Qtest, uans, false);
+        }
+    }
+
+
+    function comStr(string memory a, string memory b)
+        internal
+        pure
+        returns (bool)
+    {
+        return keccak256(bytes(a)) == keccak256(bytes(b));
+    }
+
+
+    function getCAns() public view returns (uint) {
+        return tc;
+    }
+}
+
+
+
+########  PRACTICAL-7 REMIX IDE  ###########
+########  Single Inheritance  #########
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+contract Vehicle {
+    string vehTyp;
+    string vehNum;
+
+    constructor(string memory typ, string memory num) {
+        vehTyp = typ;
+        vehNum = num;
+    }
+
+    function display() public view returns (string memory) {
+        return vehTyp;
+    }
+}
+contract Car is Vehicle {
+    string color;
+    string brand;
+
+    constructor(string memory typ, string memory num, string memory col, string memory bnd) Vehicle (typ, num) {
+        color = col;
+        brand = bnd;
+    }
+
+    function displayCar() public view returns (string memory) {
+        return brand;
+    }
+}
+
+
+#########################################################################
+#### Multiple Inheritance. ########
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+contract StudentData {
+    struct Student {
+        string name;
+        string rollNo;
+    }
+
+    Student public student;
+
+    constructor(string memory name, string memory rollNo) {
+        student = Student(name, rollNo);
+    }
+
+    function displayStudent() public view returns (string memory) {
+        return student.name;
+    }
+
+    function displayRollNo() public view returns (string memory) {
+        return student.rollNo;
+    }
+}
+
+contract Marks {
+    uint public marks;
+
+    constructor(uint m) {
+        marks = m;
+    }
+
+    function displayMarks() public view returns (uint) {
+        return marks;
+    }
+}
+
+contract Grade is StudentData, Marks {
+
+    constructor(string memory name, string memory rollNo, uint m) StudentData(name, rollNo) Marks(m) {}
+
+    function calculateGrade() public view returns (string memory) {
+        if (marks >= 80) {
+            return "O";
+        } else if (marks >= 70) {
+            return "A";
+        } else if (marks >= 60) {
+            return "B";
+        } else if (marks >= 50) {
+            return "C";
+        } else {
+            return "F";
+        }
+    }
+
+    function displayGrade() public view returns (string memory) {
+        return string.concat("Name: ", displayStudent(), " Roll No: ", displayRollNo(), " Grade: ", calculateGrade());
+    }
+}
+
+
+
+###############  PRACTICAL-8 REMIX IDE  ###########
+########   SIMPLE PROGRAM TO CHECK ETHER #########
+
+
+in input change value: from 0 to any then click transet
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+contract payex{
+    uint public b; 
+    function deposit() public payable {
+        b+=msg.value;
+    }
+}
+
+
+#########################################################################
+#### same as above only copy the account id and paste it the input. ########
+
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
+contract payex {
+    uint public b;
+    function deposit() public payable {
+        b += msg.value;
+    }
+    function transferE(address payable r) public payable {
+        require(address(this).balance >= msg.value,"Insufficient balance");
+        r.transfer(msg.value);
+    }
+}
+
+#########################################################################
+#### TO CREATE A BANKING SYSTEM SMART CONTRACT . FULL WORKING BANKING SYSTEM . ########
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+contract SimpleBank {
+
+    // Structure
+    struct Account {
+        uint accountNo;
+        string name;
+        uint balance;
+        bool exists;
+    }
+
+    // Private mapping
+    mapping(address => Account) private accounts;
+
+    // Account number
+    uint private nextAccountNo = 1001;
+
+
+    // Create Account
+    function createAccount(string memory _name) public {
+
+        require(
+            !accounts[msg.sender].exists,
+            "Account already exists"
+        );
+
+        accounts[msg.sender] = Account(
+            nextAccountNo,
+            _name,
+            0,
+            true
+        );
+
+        nextAccountNo++;
+    }
+
+
+    // Deposit Ether
+    function deposit() public payable {
+
+        require(
+            accounts[msg.sender].exists,
+            "Create account first"
+        );
+
+        require(
+            msg.value > 0,
+            "Enter valid amount"
+        );
+
+        accounts[msg.sender].balance += msg.value;
+    }
+
+
+    // Withdraw Ether
+    function withdraw(uint _amount) public {
+
+        require(
+            accounts[msg.sender].exists,
+            "Account not found"
+        );
+
+        require(
+            _amount > 0,
+            "Enter valid amount"
+        );
+
+        require(
+            accounts[msg.sender].balance >= _amount,
+            "Insufficient balance"
+        );
+
+        // Reduce balance first
+        accounts[msg.sender].balance -= _amount;
+
+        // Send Ether
+        (bool success, ) = payable(msg.sender).call{
+            value: _amount
+        }("");
+
+        require(
+            success,
+            "Transfer failed"
+        );
+    }
+
+
+    // Send Money to Another Account
+    function sendMoney(
+        address _receiver,
+        uint _amount
+    ) public {
+
+        require(
+            accounts[msg.sender].exists,
+            "Sender account not found"
+        );
+
+        require(
+            accounts[_receiver].exists,
+            "Receiver account not found"
+        );
+
+        require(
+            _amount > 0,
+            "Enter valid amount"
+        );
+
+        require(
+            accounts[msg.sender].balance >= _amount,
+            "Insufficient balance"
+        );
+
+        // Deduct from sender
+        accounts[msg.sender].balance -= _amount;
+
+        // Add to receiver
+        accounts[_receiver].balance += _amount;
+    }
+
+
+    // Check Balance
+    function checkBalance()
+        public
+        view
+        returns(uint)
+    {
+        require(
+            accounts[msg.sender].exists,
+            "Account not found"
+        );
+
+        return accounts[msg.sender].balance;
+    }
+
+
+    // Display Account
+    function displayAccount()
+        public
+        view
+        returns(
+            uint,
+            string memory,
+            uint
+        )
+    {
+        require(
+            accounts[msg.sender].exists,
+            "Account not found"
+        );
+
+        return (
+            accounts[msg.sender].accountNo,
+            accounts[msg.sender].name,
+            accounts[msg.sender].balance
+        );
+    }
+
+
+    // Check Account Exists
+    function accountExists()
+        public
+        view
+        returns(bool)
+    {
+        return accounts[msg.sender].exists;
+    }
+
+
+    // Close Account
+    function closeAccount() public {
+
+        require(
+            accounts[msg.sender].exists,
+            "Account not found"
+        );
+
+        require(
+            accounts[msg.sender].balance == 0,
+            "Withdraw balance first"
+        );
+
+        delete accounts[msg.sender];
+    }
+}
+
+
+#########################################################################
+#### Write a solidity program for students fees with these function:- 
+1)Contract should accept fees using payable function 
+2)Stored the amount paid by the each student
+3)Allow them to check their total amount as fees paid 
+4)Display the balance fees amount as well as the total amount.  ########
+
+
+ // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+contract StudentFees {
+
+    // Total fees required
+    uint public totalFees = 5 ether;
+
+    // Store fees paid by each student
+    mapping(address => uint) private paidFees;
+
+    // Pay fees
+    function payFees() public payable {
+
+        require(msg.value > 0, "Enter fees amount");
+
+        require(
+            paidFees[msg.sender] + msg.value <= totalFees,
+            "Fees amount exceeded"
+        );
+
+        paidFees[msg.sender] += msg.value;
+    }
+
+    // Check fees paid by student
+    function feesPaid() public view returns (uint) {
+        return paidFees[msg.sender];
+    }
+
+    // Check remaining fees
+    function remainingFees() public view returns (uint) {
+
+        return totalFees - paidFees[msg.sender];
+    }
+
+    // Display all fee details
+    function getFeesDetails()
+        public
+        view
+        returns (
+            uint,
+            uint,
+            uint
+        )
+    {
+        return (
+            totalFees,
+            paidFees[msg.sender],
+            totalFees - paidFees[msg.sender]
+        );
+    }
+}
+
+
+
+
+###############  PRACTICAL-9 REMIX IDE  ###########
+######## Write a solidity smart contract for a student scholarship system using inheritance, structures, events, payable function, mapping and error handling.#########
+
+it should have the following requirements:
+1. a base contract student containing student structure - id, name, course, marks, scholarship eligibility
+2. mapping to store student details using id as key
+3.derived class scholarship derives student - i] allows the owner to add student details. ii] determine scholarship eligibility based on the marks. if marks>75 iii] payable function that allows owner to deposit scholarship fund in student account. iv] create a function claim scholarship: it checks whether student exists, check whether student is eligible, check whether scholarship funds are available, transfer fixed scholarship amount to student. prevent the same student from claiming the scholarship twice. Also use exception handling.
+events: studentadded, scholarshipfunded, scholarshipclaimed.
+Create a function that displays the total scholarship funds available in the contract.
+create a function that returns the complete details of the student using the student id.
+
+
+
+//SPDX-License-Identifier:MIT
+pragma solidity ^0.8.21;
+
+contract student{
+    //Create a student struct
+    struct stuDetails{
+        uint sid;
+        string sname;
+        string scourse;
+        uint smarks;
+        bool sEligibility;
+    }
+    //Mapping student details to student id
+    mapping(uint => stuDetails) public students;
+    mapping(uint => bool) public isRegistered;
+    address public owner;
+    
+    constructor(){
+        owner = msg.sender;
+    }
+    modifier onlyOwner(){
+        require(msg.sender == owner, "This action can only be performed by the owner");
+        _;
+    }
+    //Allowing the owner to add student details.
+    function addStu(uint sid, string memory sname, string memory scourse, uint smarks) public onlyOwner{
+        require(!isRegistered[sid], "Student ID already exists");
+        bool eligible = smarks>=60;
+        students[sid] = stuDetails(sid, sname, scourse, smarks, eligible);
+        isRegistered[sid] = true;
+    }
+    //Displaying student details
+    function getStudent(uint sid) public view returns(uint, string memory, string memory, uint, bool){
+        require(isRegistered[sid],"Student record not found");
+        stuDetails memory s = students[sid];
+        return(s.sid, s.sname,s.scourse,s.smarks,s.sEligibility);
+    }
+}
+contract scholarship is student{
+    uint public sAmount = 6;
+    mapping(uint => bool) public hasClaimed;
+
+    //Owner Depositing funds
+    function depositFunds() public payable onlyOwner{}
+
+    //Student claiming scholarship
+    function claimScholarship(uint sid) public{
+        require(isRegistered[sid], "Student records not found");
+        require(students[sid].sEligibility,"Student not eligible");
+        require(!hasClaimed[sid],"Scholarship already claimed");
+        require(address(this).balance>=sAmount, "Insufficient funds");
+        hasClaimed[sid] = true;
+        payable(msg.sender).transfer(sAmount);
+    }
+
+    //Displaying Total Scholarship Funds
+    function getTotalFunds() public view returns(uint){
+        return address(this).balance;
+    }
+}
+
+
+
+
+###############  PRACTICAL-15 REMIX IDE  ###########
+
+######## Create solidity smart contract for an online shopping system:
+Requirements:
+Create base contract product with pro_id,pro_name,price and stock.
+Initialize product details using constructor
+create a derived contract online store that inherits from product.
+Implement purchase that accepts ether as payment use require to check stock and Payment   #########
+
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Product {
+    uint public pro_id;
+    string public pro_name;
+    uint public price;
+    uint public stock;
+
+    // Initialize product details using constructor
+    constructor(
+        uint _pro_id,
+        string memory _pro_name,
+        uint _price,
+        uint _stock
+    ) {
+        pro_id = _pro_id;
+        pro_name = _pro_name;
+        price = _price;
+        stock = _stock;
+    }
+}
+
+contract OnlineStore is Product {
+
+    constructor(
+        uint _pro_id,
+        string memory _pro_name,
+        uint _price,
+        uint _stock
+    ) Product(_pro_id, _pro_name, _price, _stock) {}
+
+    // Purchase product using Ether
+    function purchase(uint quantity) public payable {
+        require(quantity > 0, "Quantity must be greater than zero");
+        require(stock >= quantity, "Insufficient stock");
+        require(msg.value >= price * quantity, "Insufficient payment");
+
+        stock -= quantity;
+    }
+}
+
+
+#########################################################################
+#### Write a Solidity smart contract for a vehicle rental platform using inheritance.
+Requirements:Create a base contract Vehicle with registration number, brand, and rental price per day.Initialize the vehicle details using a constructor.Create a derived contract CarRental that inherits from Vehicle.Maintain the vehicle's availability status.Implement rentVehicle() to accept Ether based on the number of rental days.Implement returnVehicle() to update the vehicle's availability.Prevent a vehicle from being rented when it is already unavailable.Emit VehicleRented and VehicleReturned events.Add a penalty calculation for late returns 
+
+########
+iNPUT:- take 3with17zeros and and day 2 
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Vehicle {
+    string public registrationNumber;
+    string public brand;
+    uint public rentalPricePerDay;
+
+    constructor(
+        string memory _registrationNumber,
+        string memory _brand,
+        uint _rentalPricePerDay
+    ) {
+        registrationNumber = _registrationNumber;
+        brand = _brand;
+        rentalPricePerDay = _rentalPricePerDay;
+    }
+}
+
+contract CarRental is Vehicle {
+    bool public available = true;
+    address public renter;
+    uint public returnDeadline;
+
+    uint public penaltyPerDay = 0.01 ether;
+
+    event VehicleRented(address renter, uint daysRented, uint amountPaid);
+    event VehicleReturned(address renter, uint penalty);
+
+    constructor(
+        string memory _registrationNumber,
+        string memory _brand,
+        uint _rentalPricePerDay
+    ) Vehicle(_registrationNumber, _brand, _rentalPricePerDay) {}
+
+    function rentVehicle(uint daysRented) public payable {
+        require(available, "Vehicle is not available");
+        require(daysRented > 0, "Days must be greater than zero");
+        require(
+            msg.value >= rentalPricePerDay * daysRented,
+            "Insufficient rental payment"
+        );
+
+        available = false;
+        renter = msg.sender;
+        returnDeadline = block.timestamp + (daysRented * 1 days);
+
+        emit VehicleRented(
+            msg.sender,
+            daysRented,
+            msg.value
+        );
+    }
+
+    function returnVehicle() public {
+        require(!available, "Vehicle is already available");
+        require(msg.sender == renter, "Only renter can return vehicle");
+
+        uint penalty = 0;
+
+        if (block.timestamp > returnDeadline) {
+            uint lateDays =
+                (block.timestamp - returnDeadline) / 1 days;
+
+            if ((block.timestamp - returnDeadline) % 1 days > 0) {
+                lateDays++;
+            }
+
+            penalty = lateDays * penaltyPerDay;
+        }
+
+        available = true;
+        renter = address(0);
+        returnDeadline = 0;
+
+        emit VehicleReturned(msg.sender, penalty);
+    }
+
+    function getPenalty() public view returns (uint) {
+        if (available || block.timestamp <= returnDeadline) {
+            return 0;
+        }
+
+        uint lateDays =
+            (block.timestamp - returnDeadline) / 1 days;
+
+        if ((block.timestamp - returnDeadline) % 1 days > 0) {
+            lateDays++;
+        }
+
+        return lateDays * penaltyPerDay;
+    }
+}
+
+
+#########################################################################
+####  Develop a Solidity smart contract to manage doctor appointments.
+Requirements:Create a base contract Doctor with doctor name, specialization, and consultation fee.Initialize these details using a constructor.Create a derived contract Hospital that inherits from Doctor.Maintain appointment availability and booking records.Implement bookAppointment() to accept the consultation fee.Prevent two patients from booking the same appointment slot.Implement cancelAppointment() with a cancellation policy.Emit AppointmentBooked and AppointmentCancelled events.Restrict consultation fee updates to the contract owner. 
+########
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract Doctor {
+    string public doctorName;
+    string public specialization;
+    uint public consultationFee;
+
+    constructor(
+        string memory _name,
+        string memory _specialization,
+        uint _fee
+    ) {
+        doctorName = _name;
+        specialization = _specialization;
+        consultationFee = _fee;
+    }
+}
+
+contract Hospital is Doctor {
+    address public owner;
+
+    mapping(uint => address) public appointments;
+    mapping(uint => uint) public payments;
+
+    uint public constant CANCELLATION_FEE = 0.001 ether;
+
+    event AppointmentBooked(
+        address indexed patient,
+        uint indexed slot,
+        uint fee
+    );
+
+    event AppointmentCancelled(
+        address indexed patient,
+        uint indexed slot,
+        uint refund
+    );
+
+    constructor(
+        string memory _name,
+        string memory _specialization,
+        uint _fee
+    ) Doctor(_name, _specialization, _fee) {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can update fee");
+        _;
+    }
+
+    function bookAppointment(uint slot) public payable {
+        require(slot > 0, "Invalid appointment slot");
+        require(appointments[slot] == address(0), "Slot already booked");
+        require(msg.value >= consultationFee, "Insufficient consultation fee");
+
+        appointments[slot] = msg.sender;
+        payments[slot] = msg.value;
+
+        emit AppointmentBooked(msg.sender, slot, msg.value);
+    }
+
+    function cancelAppointment(uint slot) public {
+        require(appointments[slot] == msg.sender, "Not your appointment");
+
+        uint paid = payments[slot];
+        uint fee = paid < CANCELLATION_FEE
+            ? paid
+            : CANCELLATION_FEE;
+        uint refund = paid - fee;
+
+        appointments[slot] = address(0);
+        payments[slot] = 0;
+
+        (bool success, ) = payable(msg.sender).call{value: refund}("");
+        require(success, "Refund failed");
+
+        emit AppointmentCancelled(msg.sender, slot, refund);
+    }
+
+    function updateConsultationFee(uint newFee) public onlyOwner {
+        consultationFee = newFee;
+    }
+
+    function isSlotAvailable(uint slot) public view returns (bool) {
+        return appointments[slot] == address(0);
+    }
+}
 
 
 ###########################################################################################
-#######  Practical-9 Pyspark  ###########
+###############  PRACTICAL-13 Hardhat in Blockchain ###########
+make folder and do this in the terminal of vscode
+1> npm init -y
+2> npm install --save-dev hardhat
+3> npx hardhat --version
+4> npx hardhat --init 
+	first enter then 3 option then click yyyy
+5> npx hardhat compile
+6> npx harhat node  (in seprate terminal)
 
-# Step 1: Install PySpark
-!pip install pyspark
+7> make folder scripts and create deploy.js file
+8> make folder contracts folder and create a add.sol
 
-# Step 2: Import libraries and create dataset
-import pyspark
-import pandas as pd
-from pyspark.sql import SparkSession
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
 
-# Create employee dataset
-data = {
-    "Name": ["John", "Aarav", "Priya", "Rahul", "Aman",
-             "Vikram", "Neha", "Rohan", "Ananya", "Karan"],
-    "Experince": [1, 3, 2, 5, 4, 6, 1, 7, 3, 5],
-    "Age": [22, 25, 24, 29, 27, 31, 23, 33, 26, 30],
-    "Salary": [25000, 42000, 35000, 60000, 52000,
-               70000, 28000, 85000, 45000, 65000]
+contract Add {
+    int public sum = 0;
+
+    function setSum(int a, int b) public {
+        sum = a + b;
+    }
+}
+cmd:> npx hardhat compile
+9>open new terminal type
+	npm install --save-dev @nomicfoundation/hardhat-ethers ethers
+    10>npm install viem
+   
+11> in step 7 we create the deploy.js file put the below codde in that
+
+import fs from "node:fs";
+import {
+  createWalletClient,
+  createPublicClient,
+  http,
+  defineChain,
+} from "viem";
+
+const localHardhat = defineChain({
+  id: 31337,
+  name: "Hardhat Local",
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["http://127.0.0.1:8545"],
+    },
+  },
+});
+
+const artifact = JSON.parse(
+  fs.readFileSync(
+    "./artifacts/contracts/add.sol/Add.json",
+    "utf8"
+  )
+);
+
+const transport = http("http://127.0.0.1:8545");
+
+const publicClient = createPublicClient({
+  chain: localHardhat,
+  transport,
+});
+
+const walletClient = createWalletClient({
+  chain: localHardhat,
+  transport,
+});
+
+async function main() {
+  const accounts = await walletClient.getAddresses();
+
+  const account = accounts[0];
+
+  console.log("Deploying from:", account);
+
+  const hash = await walletClient.deployContract({
+    account,
+    abi: artifact.abi,
+    bytecode: artifact.bytecode,
+  });
+
+  console.log("Transaction:", hash);
+
+  const receipt = await publicClient.waitForTransactionReceipt({
+    hash,
+  });
+
+  console.log(
+    "Contract deployed to:",
+    receipt.contractAddress
+  );
 }
 
-df = pd.DataFrame(data)
-# Save dataset as CSV
-df.to_csv('Book1.csv', index=False)
-print("Book1.csv created successfully!")
-
-# Step 3: Read the CSV file using Pandas
-print("\nReading CSV using Pandas:")
-print(pd.read_csv("Book1.csv"))
-
-# Step 4: Start Spark session
-spark = SparkSession.builder.appName('Practice').getOrCreate()
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+
+
+12>npx hardhat run scripts/deploy.js --network localhost
+13> put the below code in hardhat.config.ts
+
+import { defineConfig } from "hardhat/config";
+import hardhatToolboxMochaEthers from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
+
+export default defineConfig({
+  plugins: [hardhatToolboxMochaEthers],
+  solidity: "0.8.28",
+});
+
+14>npm install --save-dev @nomicfoundation/hardhat-toolbox-mocha-ethers ethers
+15>npx hardhat clean
+16>npx hardhat compile –force
+17>npx hardhat run scripts/deploy.js --network localhost
+it will show contractaddress copy it
+18> create frontend folder and inside it create index.html and app.js
+when you run the 17> cmd you will get contractaddress replace it that in index.html 
+
+	
+Create Index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blockchain Addition</title>
+</head>
 
-# Step 5: Read dataset and store in a variable
-df_spark = spark.read.csv(
-    'Book1.csv',
-    header=True,
-    inferSchema=True
-)
-# Step 6: Display the dataset
-print("\nDisplaying Dataset:")
-df_spark.show()
-
-# Step 7: Check the type of data
-print("\nType of Data:")
-print(type(df_spark))
-
-# Step 8: Check Schema
-print("\nSchema:")
-df_spark.printSchema()
-
-# Step 9: Display the first 3 values
-print("\nFirst 3 Values:")
-print(df_spark.head(3))
-
-# Step 10: Get names of the columns
-print("\nColumns:")
-print(df_spark.columns)
-
-# Step 11: Select a specific column
-print("\nName Column:")
-df_spark.select('Name').show()
-
-# Step 12: Select multiple columns
-print("\nName and Experince Columns:")
-df_spark.select(['Name', 'Experince']).show()
-
-# Step 13: Check data types
-print("\nData Types:")
-print(df_spark.dtypes)
-
-# Step 14: Describe the dataset
-print("\nDataset Description:")
-df_spark.describe().show()
-
-# Step 15: Add a new column
-df_spark = df_spark.withColumn(
-    'Experience After 2 year',
-    df_spark['Experince'] + 2
-)
-print("\nAfter Adding a Column:")
-df_spark.show()
-
-# Step 16: Drop the added column
-df_spark = df_spark.drop('Experience After 2 year')
-print("\nAfter Dropping a Column:")
-df_spark.show()
-
-# Step 17: Rename a column
-print("\nAfter Renaming Name to EmpName:")
-df_spark.withColumnRenamed('Name', 'EmpName').show()
-
-# Step 18: Drop rows where all values are missing
-print("\nDrop Rows Where All Values Are Missing:")
-df_spark.na.drop(how="all").show()
-
-# Step 19: Drop rows where any value is missing
-print("\nDrop Rows Where Any Value Is Missing:")
-df_spark.na.drop(how="any").show()
-
-# Step 20: Drop rows using threshold and subset
-print("\nThreshold - Keep Rows with at Least 4 Non-Null Values:")
-df_spark.na.drop(how="all", thresh=4).show()
-
-print("\nDrop Rows Where Experince Is Missing:")
-df_spark.na.drop(how="any", subset=['Experince']).show()
-
-# Final Output: Display dataset, schema, and total rows
-print("\nFinal Dataset:")
-df_spark.show()
-
-print("\nFinal Schema:")
-df_spark.printSchema()
-
-print("Total Rows:", df_spark.count())
-
-EXTRA:
-
-// Read the CSV file into a DataFrame
-val dfSpark = spark.read.option("header", "true").option("inferSchema", "true").csv("Book1.csv")
-// Show records
-dfSpark.show()
-
-// Display records where Age is missing (null)
-dfSpark.filter($"Age".isNull).show()
-
-
-// Replace missing numbers with 0 and missing text with "Missing"
-val dfFilled = dfSpark.na.fill(0).na.fill("Missing")
-dfFilled.show()
-
-
-#############################################################################################
-####  ###Practical – 6 Installation of Spark and Scala Programs
-https://www.apache.org/dyn/closer.lua/spark/spark-4.2.0/spark-4.2.0-bin-hadoop3.tgz
-Step 1: Check Java installation
-Cmd - java -version
-Cmd - javac -version
-
-Step 2: Download Apache Spark
-Click https://repo.huaweicloud.com/apache/spark/spark-3.2.3/
-Find spark-3.2.3-bin-hadoop3.2.tgz there an install it
-Right click the file and extract it 
-
-Step 3: Locate the JDK installation
-Open File Explorer and navigate to: C:\Program Files (x86)\Java\jdk1.8.0_202
-Open the bin folder and verify the presence of java.exe and javac.exe
-
-Step 4: Open Environment Variables
-Under System variables:
-1.	Click New…
-2.	Enter these values:
-Variable name - JAVA_HOME
-Variable value - C:\Program Files (x86)\Java\jdk1.8.0_202
-Still under System variables:
+<body>
 
-Select Path and click Edit…
-Click New.
-Add this exact path: %JAVA_HOME%\bin
-Click ok ok ok
+    <h1>Blockchain Addition</h1>
 
-Step 5: Open a new Command Prompt and run these commands
-java -version
-javac -version
+    <input type="number" id="numberA" placeholder="Enter first number">
 
-Step 6: Copy the Spark folder path
-1.	Open the extracted folder
-2.	Go back one level to see the inner folder.
-3.	Cut the inner spark-3.2.3-bin-hadoop3.2 folder.
-4.	Open C:\ in File Explorer.
-5.	Create a folder named Spark 
-6.	Paste the extracted folder inside C:\Spark.
+    <input type="number" id="numberB" placeholder="Enter second number">
 
-Step 7: Open Edit the system environment variables → Environment Variables
-Under System variables, click New and enter:
-Variable name - SPARK_HOME
-Variable value - C:\Spark\spark-3.2.3-bin-hadoop3.2
+    <button id="addButton">Add</button>
 
+    <p id="result">Result: </p>
 
-Add Spark to Path
-1.	Under System variables, select Path → Edit…
-2.	Click New and add:  %SPARK_HOME%\bin
-Click ok ok ok
-Step 8: Open a new Command Prompt and run: spark-shell
-If error occurred on running spark-shell, open cmd as administrator run :
-mkdir C:\Java
-mklink /J C:\Java\jdk8 "C:\Program Files (x86)\Java\jdk1.8.0_202"
-Then:
-1.	Click Environment Variables…
-2.	Under System variables, select JAVA_HOME and click Edit…
-3.	Change its value to: C:\Java\jdk8
-Then again open new cm and run spark-shell
+    <script type="module">
 
-Commans to perform in scala
-println("Your Name")
-Enter
+        import {
+            createPublicClient,
+            createWalletClient,
+            http,
+            defineChain
+        } from "https://esm.sh/viem@2.56.8";
 
-Then try:
-val a = 10
-val b = 20
-val sum = a + b
-println(sum)
 
-############################################################################################    
-   ##########     Practical 7 – Scala  #################################################
-https://docs.scala-lang.org/getting-started/install-scala.html
+        const hardhat = defineChain({
+            id: 31337,
+            name: "Hardhat Local",
 
-Step 1 — Open the Scala shell
-Open Command Prompt and run: spark-shell
-If not set up then follow pract-6 to set it up and then perform this practical
+            nativeCurrency: {
+                name: "Ether",
+                symbol: "ETH",
+                decimals: 18
+            },
 
-Step 2: Addition of two numbers
-Enter each line separately -
-val a = 10
-val b = 20
-val sum = a + b
-println(sum)
+            rpcUrls: {
+                default: {
+                    http: ["http://127.0.0.1:8545"]
+                }
+            }
+        });
 
-if you made a scala file and have above code inside it run it by first cd to location and then below cmd
-:load add.scala
 
-Step 3 — Locate the people.json file
-1.	Open File Explorer.
-2.	Navigate to this folder:  C:\Spark\spark-3.2.3-bin-hadoop3.2\examples\src\main\resources
-Look for people.json.  If the file is present run this cmmnd in scala shell
+        const contractAddress =
+            "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512";
 
-Step 4 - Load people.json into Spark
-Enter cmmnd : change the \ to / in the below path
-val people = spark.read.json("C:/spark-4.2.0-bin-hadoop3/examples/src/main/resources/people.json")
 
-Enter following cmmnds one after another -- >
-•	people.show()
+        const abi = [
+            {
+                type: "function",
+                name: "setSum",
+                stateMutability: "nonpayable",
+                inputs: [
+                    {
+                        name: "a",
+                        type: "int256"
+                    },
+                    {
+                        name: "b",
+                        type: "int256"
+                    }
+                ],
+                outputs: []
+            },
 
-•	people.printSchema()
+            {
+                type: "function",
+                name: "sum",
+                stateMutability: "view",
+                inputs: [],
+                outputs: [
+                    {
+                        type: "int256"
+                    }
+                ]
+            }
+        ];
 
-•	people.select("name").show()
 
-•	people.select("name", "age").show()
+        const transport =
+            http("http://127.0.0.1:8545");
 
-•	people.filter(people("age") > 20).show()
 
-•	val csvData = spark.read.option("header", "true").option("inferSchema", "true").csv("C:/spark-4.2.0-bin-hadoop3/examples/src/main/resources/people.csv")
+        const publicClient =
+            createPublicClient({
+                chain: hardhat,
+                transport
+            });
 
-•	csvData.show()
 
-•	val csvData2 = spark.read.option("header", "true").option("inferSchema", "true").option("delimiter", ";").csv("C:/spark-4.2.0-bin-hadoop3/examples/src/main/resources/people.csv")
+        const walletClient =
+            createWalletClient({
+                chain: hardhat,
+                transport
+            });
 
-•	csvData2.show()
 
-•	csvData2.printSchema()
+        const accounts =
+            await walletClient.getAddresses();
 
-Perform this only if it is specifically stated to perform SQl queries :
 
-people.createOrReplaceTempView("people")
+        const account =
+            accounts[0];
 
-spark.sql("SELECT * FROM people").show()
 
-spark.sql("SELECT name, age FROM people").show()
+        document
+            .getElementById("addButton")
+            .addEventListener("click", async () => {
 
-spark.sql("SELECT * FROM people WHERE age > 20").show()
+                const a =
+                    BigInt(
+                        document.getElementById("numberA").value
+                    );
 
-spark.sql("SELECT COUNT(*) AS total_people FROM people").show()
+                const b =
+                    BigInt(
+                        document.getElementById("numberB").value
+                    );
 
 
-##############################################################################################
-###############  Practical – 8 : GraphX  ############################
+                const hash =
+                    await walletClient.writeContract({
+                        account: account,
 
-##Practical – 8 : GraphX
-Step 1: Open Command Prompt and run: spark-shell
-Run the following cmmnds one after another 
+                        address: contractAddress,
 
-Step 2 — Import GraphX libraries :
-import org.apache.spark._
-import org.apache.spark.rdd.RDD
-import org.apache.spark.graphx._
+                        abi: abi,
 
-Step 3 — Create graph vertices
-val vertices = Array((1L, "A"), (2L, "B"), (3L, "C"))
-val vRDD = sc.parallelize(vertices)
-vRDD.take(1)
-vRDD.take(2)
+                        functionName: "setSum",
 
-Step 4 — Create graph edges
-> val edges = Array(
-  Edge(1L, 2L, 1800),
-  Edge(2L, 3L, 800),
-  Edge(3L, 1L, 1400)
-)
-> val eRDD = sc.parallelize(edges)
-> eRDD.take(2)
+                        args: [a, b]
+                    });
 
-Step 5 — Create the Graph
-val nowhere = "nowhere"
-val graph = Graph(vRDD, eRDD, nowhere)
 
-Step 6 — Display all vertices
-graph.vertices.collect.foreach(println)
+                await publicClient.waitForTransactionReceipt({
+                    hash: hash
+                });
 
-Step 7 — Display all edges
-graph.edges.collect.foreach(println)
 
-Step 8 — Count vertices and edges
-val numairports = graph.numVertices
-val numroutes = graph.numEdges
-println(numairports)
-println(numroutes)
+                const result =
+                    await publicClient.readContract({
+                        address: contractAddress,
 
-Step 9 — Filter edges by property
-graph.edges.filter { case Edge(src, dst, prop) => prop > 1000 }.collect.foreach(println)
+                        abi: abi,
 
-Step 10 — Display graph triplets
-graph.triplets.take(3).foreach(println)
+                        functionName: "sum"
+                    });
 
-Step 11 — Calculate in-degrees
-val i = graph.inDegrees
-i.collect.foreach(println)
 
-EXTRA: 
-// Calculate out-degrees
-val o = graph.outDegrees
-o.collect.foreach(println)
+                document.getElementById("result").innerText =
+                    "Result: " + result.toString();
 
-// Calculate total degrees (both in and out combined)
-val d = graph.degrees
-d.collect.foreach(println)
+            });
 
-// Show only the vertex where the name is "A"
-graph.vertices.filter { case (id, name) => name == "A" }.collect.foreach(println)
+    </script>
 
-// Find the maximum distance route
-val maxRoute = graph.edges.map(e => e.attr).max()
-println(maxRoute)
+</body>
+</html>
 
-// Reverse all edge directions
-val reversedGraph = graph.reverse
-reversedGraph.edges.collect.foreach(println)
+
+19> go to artifacts then contracts then add.json
+  copy from abi square bracket to bracket []
+and paste or replace it in index.html
+
+20> run it live server 
+
 
 #######################################################################################
-###############      PRAC-10 HBASE    ############################################
-Step 1: Download the hbase from the following link 
-https://archive.apache.org/dist/hbase/2.2.5/hbase-2.2.5-bin.tar.gz
+###############  PRACTICAL-10 DAPP ADDITION ###########
 
-Step 2: Create hbasesetup folder extract the above in this then create this 2 folders as zookeeper and hbase
+download ganache
+copy rpc url 
+download metamask 
+In MetaMAsk go to Manage Netw and add custom ntw
+paste RPC URL ,currency symbol ETH , chainid- 1337,
+save it
+click on add account and add wallet go to ganache take anykey private key paste it
 
-Step 3: Open the bin folder then search for hbase.cmd and edit using the notepad and delete the %HEAP _SETTINGS% —> remove it 
-
-
-Open the conf folder→ edit the hbase-env.cmd 
-add the below code at the bottom of this file(the JAVA_HOME CHANGE it to you version)
-
-set JAVA_HOME=C:\Program Files\Java\jdk-25
-set HBASE_CLASSPATH=%HBASE_HOME%\lib\client-facing-thirdparty\*
-set HBASE_HEAPSIZE=8000
-set HBASE_OPTS="-Djava.net.preferIPv4Stack=true"
-set SERVER_GC_OPTS="-verbose:gc" "-XX:+PrintGCDetails" "-XX:+PrintGCDateStamps" %HBASE_GC_OPTS%
-set HBASE_USE_GC_LOGFILE=true
-set HBASE_JMX_BASE="-Dcom.sun.management.jmxremote.ssl=false" "-Dcom.sun.management.jmxremote.authenticate=false"
-set HBASE_MASTER_OPTS=%HBASE_JMX_BASE% "-Dcom.sun.management.jmxremote.port=10101"
-set HBASE_REGIONSERVER_OPTS=%HBASE_JMX_BASE% "-Dcom.sun.management.jmxremote.port=10102"
-set HBASE_THRIFT_OPTS=%HBASE_JMX_BASE% "-Dcom.sun.management.jmxremote.port=10103"
-set HBASE_ZOOKEEPER_OPTS=%HBASE_JMX_BASE% "-Dcom.sun.management.jmxremote.port=10104"
-set HBASE_REGIONSERVERS=%HBASE_HOME%\conf\regionservers
-set HBASE_LOG_DIR=%HBASE_HOME%\logs
-set HBASE_IDENT_STRING=%USERNAME%
-set HBASE_MANAGES_ZK=true
+check you will have 100ETH
 
 
-Step 5: Open the conf folder and then open the hbase-site xml 
-open with notepad
-Add the following code in it, don’t replace the existing one
+open vscode
+cmd> npm install  truffle
+> npx truffle init
 
-<property>
-        <name>hbase.cluster.distributed</name>
-        <value>false</value>
-    </property>
+make folder frontend and scripts
+inside frontend make index.html and app.js 
 
-    <property>
-        <name>hbase.tmp.dir</name>
-        <value>./tmp</value>
-    </property>
+inside contracts make addition.sol and put below code
 
-    <property>
-        <name>hbase.unsafe.stream.capability.enforce</name>
-        <value>false</value>
-    </property>
+//SPDX License Identifier: MIT
 
-    <property>
-        <name>hbase.rootdir</name>
-        <value>file:///C:/hbasesetup/hbase-2.2.5/hbase</value>
-    </property>
+pragma solidity ^0.8.21;
 
-    <property>
-        <name>hbase.zookeeper.property.dataDir</name>
-        <value>C:/hbasesetup/hbase-2.2.5/zookeeper</value>
-    </property>
+contract Addition {
+    function add(uint a, uint b) public pure returns(uint) {
+        return (a+b);
+    }
+}
 
-    <property>
-        <name>hbase.zookeeper.quorum</name>
-        <value>localhost</value>
-</property>
+make use number in start 1_deploy.js inside migration
+
+const addition = artifacts.require("addition");
+module.exports = function(deployer) {
+    deployer.deploy(addition);
+}
+
+> npx truffle compile
+>truffle migrate --network development
+
+change in truffle.config.js
+Change port to 7545
+
+in config remove //
+
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Addition App</h1>
+    <input type="number" id="n1" placeholder="Enter First number: "><br/>
+    <input type="number" id="n2" placeholder="Enter Second number: "><br/>
+
+    <button onclick="addNum()">Addition</button>
+    <h1>Addition is: <span id="result"></span></h1>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
 
 
-Step 6: Set the environment path
-in user variable and new  name: HBASE_HOME and value: path of hbase extracted not bin
+app.js(change contract address from above cmd)
 
-tep 7: Go the address bar of the file explorer write cmd over there
-C:\hbasesetup\hbase-2.2.5\bin  inside bin then at topbar cmd
+let web3;
+let contract;
 
-Run the following command 
-start-hbase.cmd
-
-then in new pop terminal which came after the above cmd 
-write this :     hbase shell
-    		 jps (check pacckets)
-runs on the windows cmd and not in the hbase cmd 
-
-##############################################################################################
-
-
-
-##################################################################################################################################       Practical-4 :  HADOOP
-Step 1: Install Hadoop
-Click https://repo.huaweicloud.com/apache/hadoop/common/hadoop-3.4.3/hadoop-3.4.3.tar.gz
-
-Step 2: Extract Folder 
-Cut the Folder inside hadoop-3.4.3 and paste that in C drive
-Rename the hadoop-3.4.3 folder name to hadoop
-
-Step 3: Inside hadoop folder create another folder name – data
-Inside that data folder create two more folders name – datanode and  namenode
-
-Step 4: Go in Environment Variable
-Under System variables, click New
-Enter these values:
-Variable name - HADOOP_HOME
-Variable value - C:\hadoop
-Click ok 
-
-Step 5: Under System variables, select Path. Click Edit.
-Add the Hadoop bin path, Click New and enter:  C:\hadoop\bin
-Click New again and enter: C:\hadoop\sbin
-Click OK ok ok
-
-Step 6: Open new cmd and run:
-echo %HADOOP_HOME%
-hadoop version
-
-Step 7: In the Hadoop directory, browse to etc/hadoop/ and open core-site.xml in Notepad.
-Replace its existing contents with the following configuration:
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-    <property>
-        <name>fs.defaultFS</name>
-        <value>hdfs://localhost:9000</value>
-    </property>
-</configuration>
-Save the file
-
-Step 8: Open: C:\hadoop\etc\hadoop
-Find hdfs-site.xml.
-Open it in Notepad or VS Code.
-Replace its contents with this configuration:
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-    <property>
-        <name>dfs.replication</name>
-        <value>1</value>
-    </property>
-
-    <property>
-        <name>dfs.namenode.name.dir</name>
-        <value>file:///C:/hadoop/data/namenode</value>
-    </property>
-
-    <property>
-        <name>dfs.datanode.data.dir</name>
-        <value>file:///C:/hadoop/data/datanode</value>
-    </property>
-</configuration>
-Save the file
-
-Step 9 : Do the same for mapred-site.xml & yarn-site.xml.
-
-mapred-site.xml 
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-    <property>
-        <name>mapreduce.framework.name</name>
-        <value>yarn</value>
-    </property>
-</configuration>
-
-yarn-site.xml 
-
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-    <property>
-        <name>yarn.nodemanager.aux-services</name>
-        <value>mapreduce_shuffle</value>
-    </property>
-
-    <property>
-        <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
-        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-    </property>
-</configuration>
-
-Step 10:  Go to the sbin folder in the hadoop directory. Open cmd there, and write the command:
-start-dfs.cmd and in same 
-start-yarn.cmd
-jps
-
-##################################################################################################################################   Practical-5: WordCount
-Step 1: Create the WordCount folder in C drive
-
-Step 2: Open the folder in VSCode
-
-Step 3: Create these file init:
-WordCountMapper.java
-WordCountReducer.java
-WordCountDriver.java
-
-Step 4: Copy this code into the first file
-WordCountMapper.java 
-
-import java.io.IOException;
-import java.util.StringTokenizer;
-import org.apache.hadoop.io.*;
-import org.apache.hadoop.mapreduce.Mapper;
-
-public class WordCountMapper
-    extends Mapper<LongWritable, Text, Text, IntWritable> {
-
-    public void map(LongWritable key, Text value, Context context)
-        throws IOException, InterruptedException {
-
-        StringTokenizer words = new StringTokenizer(value.toString());
-
-        while (words.hasMoreTokens()) {
-            context.write(new Text(words.nextToken()), new IntWritable(1));
+const contractAdd = "0x2344E25248bF06822A8feab78474AdCfD213f47c";
+const contractABI = [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "a",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "b",
+          "type": "uint256"
         }
-    }
-}
-
-WordCountReducer.java 
-
-import java.io.IOException;
-import org.apache.hadoop.io.*;
-import org.apache.hadoop.mapreduce.Reducer;
-
-public class WordCountReducer
-    extends Reducer<Text, IntWritable, Text, IntWritable> {
-
-    public void reduce(Text key, Iterable<IntWritable> values,
-        Context context) throws IOException, InterruptedException {
-
-        int sum = 0;
-
-        for (IntWritable value : values) {
-            sum += value.get();
+      ],
+      "name": "add",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
+      ],
+      "stateMutability": "pure",
+      "type": "function",
+      "constant": true
+    }
+  ];
 
-        context.write(key, new IntWritable(sum));
+async function addNum() {
+    if(typeof window.ethereum === "undefined") {
+        alert("Please install metamask");
+        return;
+    }
+    await window.ethereum.request({
+        method:"eth_requestAccounts"
+    });
+    web3=new Web3(window.ethereum);
+    const accounts = await web3.eth.getAccounts();
+
+    contract = new web3.eth.Contract(contractABI, contractAdd);
+    const n1 = document.getElementById("n1").value; 
+    const n2 = document.getElementById("n2").value;
+
+    try{
+        let r = await contract.methods.add(n1,n2).call({from:accounts[0]});
+        document.getElementById("result").innerHTML = r.toString();
+        alert("Transaction done");
+    }
+    catch(error){
+        console.log(error);
+        alert("Transaction Failed");
+    }
+
+}
+
+abi change to copy fromm build add to  to app.js
+
+run
+
+
+
+
+#######################################################################################
+###############  PRACTICAL-11 DAPP Bank System ###########
+
+bank.sol
+
+:// SPDX-License-Identifier: MIT
+
+
+pragma solidity ^0.8.21;
+
+
+contract Bank {
+    mapping(address => uint) public balance;
+
+
+    function deposit() public payable {
+        balance[msg.sender] += msg.value;
+    }
+
+
+    function withdraw(uint amount) public {
+        require(balance[msg.sender] >= amount, "Insufficient Balance");
+        balance[msg.sender] -= amount;
+        payable(msg.sender).transfer(amount);
+    }
+
+
+    function transfer(address payable receiver, uint amount) public {
+        require(balance[msg.sender] >= amount, "Insufficient Balance");
+        balance[msg.sender] -= amount;
+        balance[receiver] += amount;
+    }
+
+
+    function showBalance() public view returns (uint) {
+        return balance[msg.sender];
     }
 }
 
-WordCountDriver.java 
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.*;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-public class WordCountDriver {
+> migrations/1_deploy.js
 
-    public static void main(String[] args) throws Exception {
+const Bank = artifacts.require("bank");
+module.exports = function (deployer) {
+    deployer.deploy(Bank);
+}
+Filename: 1_deploy.js
+Source Code:
+const Bank = artifacts.require("bank");
+module.exports = function (deployer) {
+    deployer.deploy(Bank);
+}
 
-        Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "Word Count");
 
-        job.setJarByClass(WordCountDriver.class);
-        job.setMapperClass(WordCountMapper.class);
-        job.setReducerClass(WordCountReducer.class);
 
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+
+>index.html
+
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <title>Simple Bank DApp</title>
+</head>
+
+
+<body>
+    <h1>Simple Bank</h1>
+
+
+    <button id="connectButton">Connect MetaMask</button>
+
+
+    <p>Account: <span id="account">Not connected</span></p>
+
+
+    <h2>Balance</h2>
+
+
+    <p>
+        <span id="balance">0</span> ETH
+    </p>
+
+
+    <button id="refreshButton">Refresh Balance</button>
+
+
+    <hr>
+
+
+    <h2>Deposit</h2>
+
+
+    <input id="depositAmount" type="number" placeholder="ETH amount">
+    <button id="depositButton">Deposit</button>
+
+
+    <hr>
+
+
+    <h2>Withdraw</h2>
+
+
+    <input id="withdrawAmount" type="number" placeholder="ETH amount">
+    <button id="withdrawButton">Withdraw</button>
+
+
+    <hr>
+
+
+    <h2>Transfer</h2>
+
+
+    <input id="receiver" type="text" placeholder="Receiver address">
+    <input id="transferAmount" type="number" placeholder="ETH amount">
+    <button id="transferButton">Transfer</button>
+
+
+    <p id="status"></p>
+
+
+    <!-- Web3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+
+
+    <!-- Your JavaScript -->
+    <script src="app.js"></script>
+
+
+</body>
+
+
+</html>
+
+
+Filename: app.js
+
+
+let web3Instance;
+let bankContract;
+let userAccount;
+
+
+// Put your deployed Bank contract address here
+const BANK_ADDRESS = "0x1410C987Ad456c9c9666183f638cE71e81Df5F67";
+
+
+// Bank contract ABI
+const BANK_ABI = [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "balance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "showBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    }
+  ];
+
+
+// Connect MetaMask
+async function connect() {
+
+
+const accounts = await ethereum.request({
+    method: "eth_requestAccounts"
+});
+
+
+userAccount = accounts[0];
+
+
+web3Instance = new Web3(ethereum);
+
+
+bankContract = new web3Instance.eth.Contract(
+    BANK_ABI,
+    BANK_ADDRESS
+);
+
+
+document.getElementById("account").innerText = userAccount;
+
+
+getBalance();
+
+
+
+
+}
+
+
+// Show bank balance
+async function getBalance() {
+
+
+const balanceVal = await bankContract.methods
+    .showBalance()
+    .call({ from: userAccount });
+
+
+document.getElementById("balance").innerText =
+    web3Instance.utils.fromWei(balanceVal, "ether");
+
+
+
+
+}
+
+
+// Deposit
+async function deposit() {
+
+
+const depositValue =
+    document.getElementById("depositAmount").value;
+
+
+await bankContract.methods
+    .deposit()
+    .send({
+        from: userAccount,
+        value: web3Instance.utils.toWei(depositValue, "ether")
+    });
+
+
+getBalance();
+
+
+document.getElementById("status").innerText =
+    "Deposit successful!";
+
+
+
+
+}
+
+
+// Withdraw
+async function withdraw() {
+
+
+const withdrawValue =
+    document.getElementById("withdrawAmount").value;
+
+
+await bankContract.methods
+    .withdraw(
+        web3Instance.utils.toWei(withdrawValue, "ether")
+    )
+    .send({
+        from: userAccount
+    });
+
+
+getBalance();
+
+
+document.getElementById("status").innerText =
+    "Withdrawal successful!";
+
+
+
+
+}
+
+
+// Transfer
+async function transfer() {
+
+
+const recipientAddr =
+    document.getElementById("receiver").value;
+
+
+const transferValue =
+    document.getElementById("transferAmount").value;
+
+
+await bankContract.methods
+    .transfer(
+        recipientAddr,
+        web3Instance.utils.toWei(transferValue, "ether")
+    )
+    .send({
+        from: userAccount
+    });
+
+
+getBalance();
+
+
+document.getElementById("status").innerText =
+    "Transfer successful!";
+
+
+
+
+}
+
+
+// Buttons
+document
+.getElementById("connectButton")
+.onclick = connect;
+
+
+document
+.getElementById("refreshButton")
+.onclick = getBalance;
+
+
+document
+.getElementById("depositButton")
+.onclick = deposit;
+
+
+document
+.getElementById("withdrawButton")
+.onclick = withdraw;
+
+
+document
+.getElementById("transferButton")
+.onclick = transfer;
+
+
+
+#######################################################################################
+###############  PRACTICAL-11 DAPP prime no ###########
+
+
+Prime nos code:- prime.sol
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+
+contract Prime {
+    function isPrime(int n) public pure returns (string memory) {
+        if (n <= 1) {
+            return "Not Prime";
+        }
+        for (int i = 2; i * i <= n; i++) {
+            if (n % i == 0) {
+                return "Not Prime";
+            }
+        }
+        return "Prime";
     }
 }
 
-Step 5: Inside the same C:\WordCount folder, create a text file named input.txt.
-Paste this text : 
-Big data technologies like Hadoop and Spark are used to process large datasets efficiently.
-Hive and Pig are tools that make data analysis easier on top of Hadoop.
 
-Step 6: Open CMD inside C:\WordCount
-Run this cmmnd: 
-javac -classpath "C:\hadoop-3.4.3\share\hadoop\common\*;C:\hadoop-3.4.3\share\hadoop\common\lib\*;C:\hadoop-3.4.3\share\hadoop\mapreduce\*;C:\hadoop-3.4.3\share\hadoop\hdfs\*" -d . WordCountMapper.java WordCountReducer.java WordCountDriver.java
-After that run:
-dir *.class
+deploy.js
+const a = artifacts.require("prime");
+module.exports = function(deployer){
+    deployer.deploy(a);
+}
 
-Step 7: 
-jar -cvf wordcount.jar *.class
-cd /d C:\hadoop\sbin
-start-dfs.cmd
-hdfs dfs -mkdir -p /users/inputs
-hdfs dfs -put input.txt /users/inputs
 
-Step 8: Open http://localhost:9870, navigate to Utilities → Browse the file system, and check the users/inputs directory.
 
-Step 9: Return to C:\WordCount cmd and run:
-hadoop jar wordcount.jar WordCountDriver /users/inputs /user/output
-hdfs dfs -cat /user/output/part-r-00000
+Index.html 
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset ="UTF-8">
+        <meta name="viewport" content=""width=device-width, initial-scale="1.0">
+        <title>Document</title>  
+    </head>
+    <body>
+        <h1>Prime App</h1>
+        <input type = "number" id ="n" placeholder="Enter first number"><br/>
+        <button onclick="isPrime()">Addition</button>
+        <h1>Result is:
+            <span id="result"></span>
+        </h1>
+        <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>
+
+
+
+let web3;
+let contract;
+
+
+
+
+const contractAdd = "0xBc89777df8417f04d9Be14929919188A55d344e3";
+const contractABI = [
+    {
+      "inputs": [
+        {
+          "internalType": "int256",
+          "name": "n",
+          "type": "int256"
+        }
+      ],
+      "name": "isPrime",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function",
+      "constant": true
+    }
+  ];
+ 
+  async function isPrime() {
+    if(typeof window.ethereum === "undefined"){
+        alert("Please install metamask");
+        return;
+    }
+    await window.ethereum.request( {
+        method : "eth_requestAccounts"
+    } );
+    web3 = new Web3(window.ethereum);
+    const accounts = await web3.eth.getAccounts();
+    contract = new web3.eth.Contract(contractABI,contractAdd);
+    const n = document.getElementById("n").value;
+   
+    try {
+        let r=await contract.methods.isPrime(n).send({from:accounts[0]});
+        document.getElementById("result").innerHTML = r.toString();
+        alert("Transaction done");
+    }
+    catch(error) {
+        console.log(error);
+        alert("Transaction Failed");
+    }
+  }
+
+
+
+
+
